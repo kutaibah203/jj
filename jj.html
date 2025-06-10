@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>نقطتي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <style>
+        /* الخطوط */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        /* الأنماط الأساسية */
+        body {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+            background: url('Untitled_logo_1_free-file.jpg') no-repeat center center fixed; /* صورة الخلفية */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333; /* لون نص افتراضي ليكون واضحًا على الخلفية */
+            transition: background-color 0.3s, color 0.3s; /* انتقال سلس للألوان */
+        }
+        .container {
+            max-width: 650px; /* تكبير واجهة المستخدم */
+            width: 95%;
+            margin: 20px auto 80px auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* ظل أوضح */
+            text-align: center;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 25px; /* مسافات أكبر */
+            font-size: 2em; /* حجم أكبر للعناوين */
+            transition: color 0.3s;
+        }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.5em; }
+
+        input, select, textarea {
+            margin: 12px 0; /* مسافات أكبر */
+            padding: 12px; /* حشوة أكبر */
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1em; /* حجم خط أكبر */
+            box-sizing: border-box;
+            background-color: #fff; /* خلفية افتراضية للمدخلات */
+            color: #333; /* لون نص افتراضي للمدخلات */
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .password-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 90%;
+            margin: 12px auto;
+        }
+        .password-toggle input {
+            flex-grow: 1;
+            margin-right: 5px;
+        }
+        .password-toggle button {
+            width: auto;
+            padding: 10px;
+            margin: 0;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px; /* حشوة أكبر للأزرار */
+            margin: 10px 8px; /* مسافة أكبر بين الأزرار */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, color 0.3s; /* إضافة انتقال للألوان */
+            font-size: 1.1em; /* حجم خط أكبر */
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px); /* تأثير خفيف عند التحويم */
+        }
+        button:active {
+            transform: translateY(0); /* إلغاء التأثير عند النقر */
+        }
+        button.danger {
+            background-color: #e74c3c;
+        }
+        button.danger:hover {
+            background-color: #c0392b;
+        }
+        button.success {
+            background-color: #27ae60;
+            font-weight: bold; /* جعل الخط أوضح هنا */
+        }
+        button.success:hover {
+            background-color: #229954;
+        }
+        button.toggle-admin {
+            background-color: #f39c12;
+        }
+        button.toggle-admin:hover {
+            background-color: #e67e22;
+        }
+        button.convert-sar {
+            background-color: #1abc9c;
+        }
+        button.convert-sar:hover {
+            background-color: #16a085;
+        }
+        button.complete-task { /* زر إنجاز المهمة */
+            background-color: #8e44ad;
+        }
+        button.complete-task:hover {
+            background-color: #9b59b6;
+        }
+        button.clear-notifications { /* زر مسح الإشعارات */
+            background-color: #6c757d;
+        }
+        button.clear-notifications:hover {
+            background-color: #5a6268;
+        }
+
+
+        .hidden {
+            display: none;
+        }
+        .error {
+            color: #e74c3c;
+            margin: 10px 0;
+            min-height: 20px;
+            font-weight: 700; /* خط سميك */
+            transition: opacity 0.4s ease, color 0.3s;
+        }
+        .success {
+            color: #27ae60;
+            margin: 10px 0;
+            min-height: 20px;
+            font-weight: 700;
+            transition: opacity 0.4s ease, color 0.3s;
+        }
+        footer {
+            background-color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 0.9em; /* حجم خط أصغر للفوتر */
+            color: #2c3e50;
+            box-sizing: border-box;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); /* ظل خفيف لأعلى */
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        #historyList, #adminUsersList, #adminNotificationsList, #tasksList, #adminTasksList, #adminRequestsList, #adminSarSettings, #editTaskSection, #userNotificationsList { /* إزالة chatSection */
+            text-align: right;
+            margin-top: 25px;
+            max-height: 250px; /* تكبير ارتفاع القوائم */
+            overflow-y: auto;
+            background: #f8f8f8;
+            padding: 15px; /* حشوة أكبر */
+            border-radius: 12px; /* زوايا مدورة أكثر */
+            font-size: 1em;
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.05); /* ظل داخلي خفيف */
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        ul {
+            padding-inline-start: 20px;
+            text-align: right;
+            margin: 0;
+        }
+        #adminUsersList ul, #adminNotificationsList ul, #tasksList ul, #adminTasksList ul, #adminRequestsList ul, #userNotificationsList ul { /* إزالة chatSection */
+            list-style: none;
+            padding: 0;
+        }
+        #adminUsersList li, #adminNotificationsList li, #tasksList li, #adminTasksList li, #adminRequestsList li, #userNotificationsList li { /* إزالة chatSection */
+            background-color: #fff;
+            margin-bottom: 10px; /* مسافات أكبر بين العناصر */
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* ظل أوضح */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px; /* مسافة أكبر بين العناصر الداخلية */
+            text-align: right;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        #adminUsersList li div, #adminTasksList li div, #adminRequestsList li div, #adminNotificationsList li div { /* تعديل محاذاة الأزرار في القوائم */
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; /* لدفع الأزرار لليسار داخل الليست */
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px; /* مسافة بين المحتوى والأزرار */
+        }
+        #adminUsersList li button, #adminTasksList li button, #adminRequestsList li button, #adminNotificationsList li button {
+            margin: 0 2px;
+            padding: 8px 15px; /* حشوة أكبر للأزرار داخل القوائم */
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+        #adminUsersList li input {
+            width: 100px; /* حجم أصغر لحقل النقاط */
+            margin: 0 5px 0 0; /* مسافة على اليمين */
+            padding: 8px;
+            font-size: 0.9em;
+        }
+        .task-timer { /* سيتم استخدامه داخل كل مهمة الآن */
+            font-size: 0.9em;
+            color: #c0392b;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center; /* توسيط العداد */
+            transition: color 0.3s;
+        }
+        .task-buttons {
+            display: flex;
+            justify-content: flex-end; /* الأزرار على اليسار */
+            width: 100%;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .task-points {
+            font-size: 0.9em;
+            color: #27ae60;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .request-status {
+            font-weight: bold;
+            color: #f39c12; /* لون برتقالي لحالة معلق */
+            transition: color 0.3s;
+        }
+        .notification-status-approved {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .notification-status-rejected {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .notification-status-deletion { /* حالة لطلب الحذف */
+            color: #3498db;
+            font-weight: bold;
+        }
+        #adminSarSettings p {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 15px;
+            transition: color 0.3s;
+        }
+        #adminSarSettings input {
+            width: calc(90% - 120px); /* حجم مناسب مع الزر */
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        #adminSarSettings button {
+            width: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        #editTaskSection {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f0f8ff;
+            margin-top: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        #editTaskSection h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        #editTaskSection input,
+        #editTaskSection textarea,
+        #editTaskSection select {
+            width: calc(100% - 24px); /* لكي لا يتجاوز الحدود مع البادينغ */
+        }
+
+        /* زر تبديل الوضع */
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            left: 20px; /* وضعه في الزاوية اليسرى العلوية */
+            background-color: #6c757d;
+            color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        #darkModeToggle:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+
+        /* زر الرجوع الجديد */
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px; /* وضعه في الزاوية اليمنى العلوية */
+            background-color: #3498db;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        #backButton:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        /* أنماط زر خدمة العملاء في الفوتر */
+        #customerServiceButton {
+            background-color: #4CAF50; /* لون أخضر جميل */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px; /* لإعطاء مسافة من باقي الفوتر */
+            min-width: 150px; /* لتوسيع الزر قليلاً */
+        }
+        #customerServiceButton:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* أنماط المودال (النافذة المنبثقة) */
+        .modal {
+            display: none; /* مخفي افتراضياً */
+            position: fixed; /* يبقى في مكانه حتى عند التمرير */
+            z-index: 1001; /* يظهر فوق كل شيء آخر */
+            left: 0;
+            top: 0;
+            width: 100%; /* عرض كامل */
+            height: 100%; /* ارتفاع كامل */
+            overflow: auto; /* تمكين التمرير إذا كان المحتوى كبيرًا */
+            background-color: rgba(0,0,0,0.6); /* خلفية سوداء شبه شفافة */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%; /* عرض المودال */
+            max-width: 500px; /* زيادة عرض المودال لخدمة العملاء */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            text-align: center;
+            color: #333;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            display: flex; /* لترتيب الأيقونات والنص */
+            align-items: center;
+            justify-content: center; /* توسيط المحتوى */
+            gap: 10px; /* مسافة بين الأيقونة والنص */
+        }
+        .modal-content p i { /* أنماط الأيقونات */
+            font-size: 1.3em;
+            color: #3498db;
+        }
+        .modal-content p .phone-number { /* لجعل رقم الهاتف قابل للنسخ */
+            user-select: all; /* يسمح بتحديد النص بالكامل بسهولة */
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+
+        .modal-content a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .modal-content a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            left: 20px; /* الزاوية اليسرى العلوية */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+        }
+
+
+        /* أنماط الوضع الداكن */
+        body.dark-mode {
+            background-color: #1a1a1a; /* خلفية داكنة */
+            background-image: none; /* إزالة صورة الخلفية في الوضع الداكن */
+            color: #f5f5f5; /* لون نص فاتح */
+        }
+        body.dark-mode .container {
+            background-color: rgba(45, 45, 45, 0.95);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3 {
+            color: #e0e0e0;
+        }
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background-color: #333;
+            color: #f5f5f5;
+            border-color: #555;
+        }
+        body.dark-mode button {
+            background-color: #555; /* أزرار داكنة */
+            color: #f5f5f5;
+        }
+        body.dark-mode button:hover {
+            background-color: #666;
+        }
+        body.dark-mode button.danger {
+            background-color: #c0392b;
+        }
+        body.dark-mode button.danger:hover {
+            background-color: #a0291b;
+        }
+        body.dark-mode button.success {
+            background-color: #229954;
+        }
+        body.dark-mode button.success:hover {
+            background-color: #1d7b42;
+        }
+        body.dark-mode button.toggle-admin {
+            background-color: #e67e22;
+        }
+        body.dark-mode button.toggle-admin:hover {
+            background-color: #d35400;
+        }
+        body.dark-mode button.complete-task {
+            background-color: #9b59b6;
+        }
+        body.dark-mode button.complete-task:hover {
+            background-color: #8e44ad;
+        }
+        body.dark-mode button.clear-notifications {
+            background-color: #5a6268;
+        }
+        body.dark-mode button.clear-notifications:hover {
+            background-color: #4b5257;
+        }
+
+        body.dark-mode footer {
+            background-color: rgba(30, 30, 30, 0.85);
+            color: #e0e0e0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+        body.dark-mode #historyList,
+        body.dark-mode #adminUsersList,
+        body.dark-mode #adminNotificationsList,
+        body.dark-mode #tasksList,
+        body.dark-mode #adminTasksList,
+        body.dark-mode #adminRequestsList,
+        body.dark-mode #adminSarSettings,
+        body.dark-mode #editTaskSection,
+        body.dark-mode #userNotificationsList { /* إزالة chatSection */
+            background: #2a2a2a;
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+        }
+        body.dark-mode #adminUsersList li,
+        body.dark-mode #adminNotificationsList li,
+        body.dark-mode #tasksList li,
+        body.dark-mode #adminTasksList li,
+        body.dark-mode #adminRequestsList li,
+        body.dark-mode #userNotificationsList li { /* إزالة chatSection */
+            background-color: #383838;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        body.dark-mode .task-timer,
+        body.dark-mode .error {
+            color: #ff7675; /* لون مختلف لعداد الوقت والأخطاء في الوضع الداكن */
+        }
+        body.dark-mode .success,
+        body.dark-mode .task-points,
+        body.dark-mode .notification-status-approved {
+            color: #7bed9f; /* لون مختلف للنجاح والنقاط في الوضع الداكن */
+        }
+        body.dark-mode .request-status,
+        body.dark-mode .notification-status-rejected {
+            color: #ffeaa7; /* لون مختلف لحالة الطلب في الوضع الداكن */
+        }
+        body.dark-mode .notification-status-deletion {
+            color: #8be0ff; /* لون مختلف لطلب الحذف في الوضع الداكن */
+        }
+        body.dark-mode #adminSarSettings p {
+            color: #b2bec3;
+        }
+        body.dark-mode #editTaskSection {
+            background-color: #2e3b4e;
+            border-color: #4a6c8e;
+        }
+        body.dark-mode #editTaskSection h3 {
+            color: #8be0ff;
+        }
+        body.dark-mode a {
+            color: #a0c4ff; /* لون الروابط في الوضع الداكن */
+        }
+        body.dark-mode a:hover {
+            color: #7b9eff;
+        }
+        body.dark-mode #backButton {
+            background-color: #4a6c8e;
+            color: #e0e0e0;
+        }
+        body.dark-mode #backButton:hover {
+            background-color: #5a82a6;
+        }
+        /* أنماط المودال في الوضع الداكن */
+        body.dark-mode .modal-content {
+            background-color: #383838;
+            color: #f5f5f5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+        }
+        body.dark-mode .modal-content h3 {
+            color: #e0e0e0;
+        }
+        body.dark-mode .modal-content a {
+            color: #8be0ff;
+        }
+        body.dark-mode .modal-content a:hover {
+            color: #6fb0e0;
+        }
+        body.dark-mode .modal-content p i { /* أيقونات المودال في الوضع الداكن */
+            color: #8be0ff;
+        }
+        body.dark-mode .close-button {
+            color: #bbb;
+        }
+        body.dark-mode .close-button:hover,
+        body.dark-mode .close-button:focus {
+            color: #f5f5f5;
+        }
+        body.dark-mode #customerServiceButton {
+            background-color: #388e3c;
+        }
+        body.dark-mode #customerServiceButton:hover {
+            background-color: #2e7d32;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.3em; }
+            input, select, textarea {
+                width: 100%;
+                font-size: 1em;
+                padding: 10px;
+            }
+            .password-toggle {
+                width: 100%;
+            }
+            button {
+                width: 48%;
+                margin: 5px 1%;
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+            #adminUsersList li div, #adminTasksList li div, #adminRequestsList li div, #adminNotificationsList li div {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #adminUsersList li button, #adminTasksList li button, #adminRequestsList li button, #adminNotificationsList li button {
+                width: 100%;
+                margin: 2px 0;
+            }
+            #adminUsersList li input {
+                width: 100%;
+                margin: 5px 0;
+            }
+            #adminSarSettings input, #adminSarSettings button {
+                width: 100%;
+                display: block;
+                margin: 5px 0;
+            }
+            #editTaskSection input,
+            #editTaskSection textarea,
+            #editTaskSection select {
+                width: 100%;
+            }
+            #darkModeToggle {
+                top: 10px;
+                left: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.3em;
+            }
+            #backButton {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+            }
+            .close-button {
+                font-size: 24px;
+                top: 5px;
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="darkModeToggle" aria-label="تبديل الوضع"></button>
+
+    <button id="backButton" class="hidden" onclick="goBack()">رجوع</button>
+
+    <div class="container">
+        <h1>مرحبًا بك في نقطتي</h1>
+
+        <div id="main">
+            <button onclick="showSignup()">إنشاء حساب</button>
+            <button onclick="showLogin()">تسجيل الدخول</button>
+            <button onclick="showForgotPassword()">نسيت كلمة المرور؟</button>
+        </div>
+
+        <div id="signup" class="hidden">
+            <h2>إنشاء حساب</h2>
+            <input id="signupEmail" type="email" placeholder="البريد الإلكتروني" required />
+            <div class="password-toggle">
+                <input id="signupPassword" type="password" placeholder="كلمة المرور" required />
+                <button type="button" onclick="togglePasswordVisibility('signupPassword')"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-toggle">
+                <input id="signupPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور" required />
+                <button type="button" onclick="togglePasswordVisibility('signupPasswordConfirm')"><i class="fas fa-eye"></i></button>
+            </div>
+            <input id="signupUsername" placeholder="اسم المستخدم" required />
+            <div id="signupError" class="error"></div>
+            <div id="signupSuccess" class="success"></div>
+            <button onclick="createAccount()">إنشاء</button>
+        </div>
+
+        <div id="login" class="hidden">
+            <h2>تسجيل الدخول</h2>
+            <input id="loginIdentifier" type="text" placeholder="اسم المستخدم أو البريد الإلكتروني" required />
+            <div class="password-toggle">
+                <input id="loginPassword" type="password" placeholder="كلمة المرور" required />
+                <button type="button" onclick="togglePasswordVisibility('loginPassword')"><i class="fas fa-eye"></i></button>
+            </div>
+            <div id="loginError" class="error"></div>
+            <button onclick="loginUser()">دخول</button>
+        </div>
+
+        <div id="forgotPassword" class="hidden">
+            <h2>نسيت كلمة المرور</h2>
+            <input id="forgotEmail" type="email" placeholder="أدخل بريدك الإلكتروني" required />
+            <div id="forgotError" class="error"></div>
+            <div id="forgotSuccess" class="success"></div>
+            <button onclick="resetPassword()">إعادة تعيين</button>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <h2>لوحة التحكم</h2>
+            <div id="balance"></div>
+            <button onclick="showTransfer()">تحويل النقاط</button>
+            <button onclick="showConvertSAR()">تحويل إلى SAR</button>
+            <button onclick="showProfile()">الملف الشخصي</button>
+            <button id="userNotificationsBtn" class="hidden" onclick="showUserNotifications()">إشعاراتي</button> <button id="adminDashboardBtn" class="hidden" onclick="showAdminDashboard()">لوحة تحكم المسؤول</button>
+            <button onclick="logout()">تسجيل الخروج</button>
+            <div id="historyList"></div>
+            <div id="tasksList"></div> </div>
+
+        <div id="transfer" class="hidden">
+            <h3>تحويل النقاط</h3>
+            <input id="transferAmount" type="number" placeholder="عدد النقاط" required />
+            <input id="recipientUsername" placeholder="اسم المستخدم للمستلم" required />
+            <div id="transferError" class="error"></div>
+            <div id="transferSuccess" class="success"></div>
+            <button onclick="confirmTransfer()">تحويل</button>
+        </div>
+
+        <div id="convertSAR" class="hidden">
+            <h3>تحويل النقاط إلى SAR</h3>
+            <p id="sarConversionRateText">كل <span id="currentSarPointsRate"></span> نقطة = 1 SAR</p>
+            <input id="sarAmount" type="number" placeholder="عدد النقاط المراد تحويلها" required />
+            <div id="sarConversionError" class="error"></div>
+            <div id="sarConversionSuccess" class="success"></div>
+            <button onclick="confirmSARConversion()">تحويل</button>
+        </div>
+
+        <div id="profile" class="hidden">
+            <h2>الملف الشخصي</h2>
+            <p><b>اسم المستخدم:</b> <span id="profileUsername"></span></p>
+            <p><b>البريد الإلكتروني:</b> <span id="profileEmail"></span></p>
+            <p><b>رصيد النقاط:</b> <span id="profilePoints"></span> نقطة</p>
+            <h3>تغيير كلمة المرور</h3>
+            <input id="currentPassword" type="password" placeholder="كلمة المرور الحالية" />
+            <input id="newPassword" type="password" placeholder="كلمة المرور الجديدة" />
+            <input id="newPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور الجديدة" />
+            <div id="passwordChangeError" class="error"></div>
+            <div id="passwordChangeSuccess" class="success"></div>
+            <button onclick="changePassword()">تغيير كلمة المرور</button>
+            <button class="danger" onclick="requestAccountDeletion()">طلب حذف الحساب</button> </div>
+
+        <div id="userNotifications" class="hidden">
+            <h2>إشعاراتي</h2>
+            <div id="userNotificationsList">
+                <p>لا توجد إشعارات حاليًا.</p>
+            </div>
+            <button class="clear-notifications" onclick="clearUserNotifications()">حذف جميع الإشعارات</button> </div>
+        <div id="adminDashboard" class="hidden">
+            <h2>لوحة تحكم المسؤول</h2>
+            <button onclick="updateAdminUsersList()">إدارة المستخدمين</button>
+            <button onclick="showAdminNotifications()">إشعارات التحويل وطلبات الحذف</button> <button onclick="showAdminRequests()">طلبات المهام</button>
+            <button onclick="showAdminTasksManagement()">إدارة المهام</button>
+            <button onclick="showAdminSarSettings()">إعدادات تحويل SAR</button>
+            <div id="adminUsersList"></div>
+            <div id="adminMessage" class="error"></div>
+        </div>
+        <div id="adminNotifications" class="hidden">
+            <h2>إشعارات التحويل وطلبات حذف الحساب</h2>
+            <div id="adminNotificationsList"></div>
+            <button class="clear-notifications" onclick="clearAdminNotifications()">مسح جميع الإشعارات</button> </div>
+        <div id="adminRequests" class="hidden">
+            <h2>طلبات إنجاز المهام</h2>
+            <div id="adminRequestsList"></div>
+        </div>
+        <div id="adminTasksManagement" class="hidden">
+            <h2>إدارة المهام</h2>
+            <h3>إضافة مهمة جديدة</h3>
+            <textarea id="newTaskDescription" placeholder="وصف المهمة" rows="3"></textarea>
+            <input id="newTaskPoints" type="number" placeholder="عدد نقاط المهمة" />
+            <select id="newTaskAssignee">
+                <option value="all">جميع المستخدمين</option>
+                <option value="specific">مستخدم محدد</option>
+            </select>
+            <input id="specificUsernames" placeholder="اسم المستخدم (أو أسماء مفصولة بفاصلة)" class="hidden" />
+            <div id="adminTaskError" class="error"></div>
+            <div id="adminTaskSuccess" class="success"></div>
+            <button onclick="addNewTask()">إضافة مهمة</button>
+
+            <h3 style="margin-top: 30px;">تعديل مهمة موجودة</h3>
+            <input id="editTaskId" type="number" placeholder="أدخل معرف المهمة (ID) لتعديلها" />
+            <button onclick="populateEditTaskForm()">تعديل المهمة</button>
+
+            <div id="editTaskSection" class="hidden">
+                <h3>تفاصيل المهمة المراد تعديلها</h3>
+                <p><b>معرف المهمة (ID):</b> <span id="currentEditTaskId"></span></p>
+                <textarea id="editTaskDescription" placeholder="وصف المهمة الجديد" rows="3"></textarea>
+                <input id="editTaskPoints" type="number" placeholder="عدد نقاط المهمة الجديد" />
+                <select id="editTaskAssignee">
+                    <option value="all">جميع المستخدمين</option>
+                    <option value="specific">مستخدم محدد</option>
+                </select>
+                <input id="editSpecificUsernames" placeholder="اسم المستخدم (أو أسماء مفصولة بفاصلة)" class="hidden" />
+                <div id="editTaskError" class="error"></div>
+                <div id="editTaskSuccess" class="success"></div>
+                <button class="success" onclick="saveEditedTask()">حفظ التعديلات</button>
+                <button onclick="cancelEditTask()">إلغاء التعديل</button>
+            </div>
+
+            <h3>المهام الحالية</h3>
+            <div id="adminTasksList"></div>
+        </div>
+        <div id="adminSarSettings" class="hidden">
+            <h2>إعدادات تحويل SAR</h2>
+            <p>القيمة الحالية: كل <span id="currentSarPointsValue"></span> نقطة = 1 SAR</p>
+            <input id="newSarPointsRate" type="number" placeholder="أدخل عدد النقاط لـ 1 SAR" />
+            <div id="sarSettingsError" class="error"></div>
+            <div id="sarSettingsSuccess" class="success"></div>
+            <button class="success" onclick="updateSarConversionRate()">تعديل القيمة</button>
+        </div>
+        </div>
+
+    <div id="customerServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCustomerServiceModal()">&times;</span>
+            <h3>خدمة العملاء</h3>
+            <p><i class="fas fa-envelope"></i> <a href="mailto:kutaibah.ktha@gmail.com">kutaibah.ktha@gmail.com</a></p>
+            <p><i class="fas fa-phone"></i> <span class="phone-number" onclick="copyPhoneNumber('0509248264')">0509248264</span></p>
+        </div>
+    </div>
+
+    <footer>
+        <button id="customerServiceButton" onclick="openCustomerServiceModal()">خدمة العملاء</button>
+         جميع الحقوق محفوظة لدى NOKTATI©
+    </footer>
+
+    <script>
+        // مفاتيح localStorage
+        const STORAGE_USERS = "noktati_users";
+        const STORAGE_HISTORY = "noktati_history";
+        const STORAGE_ADMIN_NOTIFICATIONS = "noktati_admin_notifications";
+        const STORAGE_TASKS = "noktati_tasks";
+        const STORAGE_TASK_REQUESTS = "noktati_task_requests";
+        const STORAGE_LAST_TASK_REQUEST_TIME = "noktati_last_task_request_time";
+        const STORAGE_SAR_RATE = "noktati_sar_rate";
+        const STORAGE_DARK_MODE = "noktati_dark_mode";
+        const STORAGE_LAST_PAGE = "noktati_last_page"; // لتخزين الصفحة الأخيرة
+
+
+        let users = JSON.parse(localStorage.getItem(STORAGE_USERS)) || {};
+        let transferHistory = JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || {};
+        let adminNotifications = JSON.parse(localStorage.getItem(STORAGE_ADMIN_NOTIFICATIONS)) || [];
+        let tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS)) || [];
+        let taskRequests = JSON.parse(localStorage.getItem(STORAGE_TASK_REQUESTS)) || [];
+        let lastTaskRequestTime = JSON.parse(localStorage.getItem(STORAGE_LAST_TASK_REQUEST_TIME)) || {};
+        let sarConversionRate = Number(localStorage.getItem(STORAGE_SAR_RATE)) || 100;
+
+
+        // الحد الأقصى لعدد الحسابات (بما في ذلك المسؤول)
+        const MAX_ACCOUNTS = 6;
+
+        // المدة الزمنية للانتظار لكل مهمة بعد تقديم طلبها (30 دقيقة)
+        const TASK_COOLDOWN_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+        let currentUser = null;
+        let editingTaskId = null; // لتخزين معرف المهمة التي يتم تعديلها
+        let currentPage = 'main'; // لتتبع الصفحة الحالية
+        let previousPage = 'main'; // لتتبع الصفحة السابقة
+
+
+        // إضافة مستخدم مسؤول افتراضي للتجربة وتحديث كلمة المرور
+        if (!users['admin']) {
+            users['admin'] = {
+                email: 'admin@noktati.com',
+                username: 'admin',
+                password: 'XOI?90rf',
+                points: 999999,
+                isAdmin: true,
+                notifications: []
+            };
+            saveData();
+        } else {
+            if (users['admin'].password !== 'XOI?90rf') {
+                users['admin'].password = 'XOI?90rf';
+                saveData();
+            }
+             // التأكد أن جميع المستخدمين لديهم خاصية notifications
+            for (const userKey in users) {
+                if (!users[userKey].notifications) {
+                    users[userKey].notifications = [];
+                }
+            }
+            saveData();
+        }
+
+        // دالة حفظ البيانات
+        function saveData() {
+            localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+            localStorage.setItem(STORAGE_HISTORY, JSON.stringify(transferHistory));
+            localStorage.setItem(STORAGE_ADMIN_NOTIFICATIONS, JSON.stringify(adminNotifications));
+            localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
+            localStorage.setItem(STORAGE_TASK_REQUESTS, JSON.stringify(taskRequests));
+            localStorage.setItem(STORAGE_LAST_TASK_REQUEST_TIME, JSON.stringify(lastTaskRequestTime));
+            localStorage.setItem(STORAGE_SAR_RATE, sarConversionRate.toString());
+        }
+
+        // -------------------------------------------------------------
+        // وظائف الوضع الداكن/الفاتح
+        // -------------------------------------------------------------
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        function applyDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // أيقونة الشمس للوضع الفاتح
+                localStorage.setItem(STORAGE_DARK_MODE, 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // أيقونة القمر للوضع الداكن
+                localStorage.setItem(STORAGE_DARK_MODE, 'light');
+            }
+        }
+
+        // عند تحميل الصفحة، تحقق من التفضيل المحفوظ
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedMode = localStorage.getItem(STORAGE_DARK_MODE);
+            if (savedMode === 'dark') {
+                applyDarkMode(true);
+            } else {
+                applyDarkMode(false); // الافتراضي هو الوضع الفاتح
+            }
+        });
+
+        darkModeToggle.addEventListener('click', () => {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            applyDarkMode(!isDarkMode);
+        });
+
+        // -------------------------------------------------------------
+        // وظائف التنقل بين الصفحات
+        // -------------------------------------------------------------
+        function hideAllSections() {
+            ["main", "signup", "login", "forgotPassword", "dashboard", "transfer", "convertSAR", "profile", "adminDashboard", "adminNotifications", "adminRequests", "adminTasksManagement", "adminSarSettings", "userNotifications"].forEach(id => { // تم إزالة chatSection و adminChatSection
+                document.getElementById(id).classList.add("hidden");
+            });
+            clearMessages();
+        }
+
+        function clearMessages() {
+            ["signupError", "signupSuccess", "loginError", "loginError", "forgotError", "forgotSuccess", "transferError", "transferSuccess", "sarConversionError", "sarConversionSuccess", "passwordChangeError", "passwordChangeSuccess", "adminMessage", "adminTaskError", "adminTaskSuccess", "sarSettingsError", "sarSettingsSuccess", "editTaskError", "editTaskSuccess"].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = "";
+            });
+        }
+
+        function showPage(pageId) {
+            previousPage = currentPage; // حفظ الصفحة الحالية كسابقة
+            currentPage = pageId; // تحديث الصفحة الحالية
+            hideAllSections();
+            document.getElementById(pageId).classList.remove("hidden");
+            
+            // إظهار أو إخفاء زر الرجوع
+            if (pageId === 'main' || pageId === 'dashboard') {
+                document.getElementById('backButton').classList.add('hidden');
+            } else {
+                document.getElementById('backButton').classList.remove('hidden');
+            }
+        }
+
+        function goBack() {
+            if (currentPage === 'dashboard') {
+                showPage('main');
+            } else if (currentPage === 'adminDashboard') {
+                showPage('dashboard');
+            } else if (currentPage === 'signup' || currentPage === 'login' || currentPage === 'forgotPassword') {
+                showPage('main');
+            } else {
+                showPage(previousPage); // العودة إلى الصفحة السابقة
+            }
+        }
+
+        function showMain() {
+            showPage("main");
+        }
+
+        function showSignup() {
+            showPage("signup");
+            clearSignupForm();
+        }
+
+        function showLogin() {
+            showPage("login");
+            clearLoginForm();
+        }
+
+        function showForgotPassword() {
+            showPage("forgotPassword");
+            clearForgotForm();
+        }
+
+        function showDashboard() {
+            showPage("dashboard");
+            updateDashboard();
+            updateTasksList();
+            if (currentUser && users[currentUser] && users[currentUser].isAdmin) {
+                document.getElementById("adminDashboardBtn").classList.remove("hidden");
+                document.getElementById("userNotificationsBtn").classList.add("hidden");
+            } else if (currentUser && users[currentUser] && !users[currentUser].isAdmin) {
+                document.getElementById("adminDashboardBtn").classList.add("hidden");
+                document.getElementById("userNotificationsBtn").classList.remove("hidden");
+            } else {
+                document.getElementById("adminDashboardBtn").classList.add("hidden");
+                document.getElementById("userNotificationsBtn").classList.add("hidden");
+            }
+        }
+
+        function showTransfer() {
+            showPage("transfer");
+            clearTransferForm();
+        }
+
+        function showConvertSAR() {
+            showPage("convertSAR");
+            document.getElementById("sarAmount").value = "";
+            document.getElementById("currentSarPointsRate").textContent = sarConversionRate;
+            clearMessages();
+        }
+
+        function showProfile() {
+            showPage("profile");
+            updateProfile();
+        }
+
+        function showUserNotifications() {
+            if (!currentUser || users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات للوصول إلى هذه الصفحة.");
+                showDashboard();
+                return;
+            }
+            showPage("userNotifications");
+            updateUserNotificationsList();
+        }
+
+        function showAdminDashboard() {
+            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات الوصول إلى لوحة تحكم المسؤول.");
+                showDashboard();
+                return;
+            }
+            showPage("adminDashboard");
+            updateAdminUsersList();
+        }
+
+        function showAdminNotifications() {
+            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
+                showDashboard();
+                return;
+            }
+            showPage("adminNotifications");
+            updateAdminNotificationsList();
+        }
+
+        function showAdminRequests() {
+            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
+                showDashboard();
+                return;
+            }
+            showPage("adminRequests");
+            updateAdminRequestsList();
+        }
+
+        function showAdminTasksManagement() {
+            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
+                showDashboard();
+                return;
+            }
+            showPage("adminTasksManagement");
+            updateAdminTasksList();
+            document.getElementById("editTaskSection").classList.add("hidden");
+            document.getElementById("editTaskId").value = "";
+            editingTaskId = null;
+            
+            document.getElementById("newTaskAssignee").addEventListener("change", function() {
+                if (this.value === "specific") {
+                    document.getElementById("specificUsernames").classList.remove("hidden");
+                } else {
+                    document.getElementById("specificUsernames").classList.add("hidden");
+                }
+            });
+
+            document.getElementById("editTaskAssignee").addEventListener("change", function() {
+                if (this.value === "specific") {
+                    document.getElementById("editSpecificUsernames").classList.remove("hidden");
+                } else {
+                    document.getElementById("editSpecificUsernames").classList.add("hidden");
+                }
+            });
+
+            document.getElementById("newTaskDescription").value = "";
+            document.getElementById("newTaskPoints").value = "";
+            document.getElementById("newTaskAssignee").value = "all";
+            document.getElementById("specificUsernames").value = "";
+            document.getElementById("specificUsernames").classList.add("hidden");
+            clearMessages();
+        }
+
+        function showAdminSarSettings() {
+            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
+                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
+                showDashboard();
+                return;
+            }
+            showPage("adminSarSettings");
+            document.getElementById("currentSarPointsValue").textContent = sarConversionRate;
+            document.getElementById("newSarPointsRate").value = sarConversionRate;
+            clearMessages();
+        }
+
+
+        function togglePasswordVisibility(id) {
+            let input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        function clearSignupForm() {
+            document.getElementById("signupEmail").value = "";
+            document.getElementById("signupPassword").value = "";
+            document.getElementById("signupPasswordConfirm").value = "";
+            document.getElementById("signupUsername").value = "";
+            clearMessages();
+        }
+
+        function clearLoginForm() {
+            document.getElementById("loginIdentifier").value = "";
+            document.getElementById("loginPassword").value = "";
+            clearMessages();
+        }
+
+        function clearForgotForm() {
+            document.getElementById("forgotEmail").value = "";
+            clearMessages();
+        }
+
+        function clearTransferForm() {
+            document.getElementById("transferAmount").value = "";
+            document.getElementById("recipientUsername").value = "";
+            clearMessages();
+        }
+
+        function isValidEmail(email) {
+            return /\S+@\S+\.\S+/.test(email);
+        }
+
+        function isStrongPassword(pw) {
+            return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pw);
+        }
+
+        function createAccount() {
+            clearMessages();
+            const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+            const password = document.getElementById("signupPassword").value;
+            const passwordConfirm = document.getElementById("signupPasswordConfirm").value;
+            const username = document.getElementById("signupUsername").value.trim();
+
+            // التحقق من الحد الأقصى للحسابات
+            const currentAccountCount = Object.keys(users).length;
+            if (currentAccountCount >= MAX_ACCOUNTS) {
+                document.getElementById("signupError").textContent = `عذراً، لقد تم الوصول للحد الأقصى لعدد الحسابات المسموح بها (${MAX_ACCOUNTS} حساب).`;
+                return;
+            }
+
+
+            if (!email || !password || !passwordConfirm || !username) {
+                document.getElementById("signupError").textContent = "جميع الحقول مطلوبة.";
+                return;
+            }
+            if (!isValidEmail(email)) {
+                document.getElementById("signupError").textContent = "البريد الإلكتروني غير صحيح.";
+                return;
+            }
+            if (password !== passwordConfirm) {
+                document.getElementById("signupError").textContent = "كلمتا المرور غير متطابقتين.";
+                return;
+            }
+            if (!isStrongPassword(password)) {
+                document.getElementById("signupError").textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحوي حرف كبير ورقم.";
+                return;
+            }
+            for (const userKey in users) {
+                if (users[userKey].email === email) {
+                    document.getElementById("signupError").textContent = "البريد الإلكتروني مسجل بالفعل.";
+                    return;
+                }
+                if (users[userKey].username === username) {
+                    document.getElementById("signupError").textContent = "اسم المستخدم موجود بالفعل.";
+                    return;
+                }
+            }
+            users[username] = {
+                email,
+                username,
+                password,
+                points: 100,
+                isAdmin: false,
+                notifications: []
+            };
+            saveData();
+            document.getElementById("signupSuccess").textContent = "تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
+            clearSignupForm();
+            setTimeout(() => {
+                showLogin();
+            }, 2000);
+        }
+
+        function loginUser() {
+            clearMessages();
+            const identifier = document.getElementById("loginIdentifier").value.trim().toLowerCase();
+            const password = document.getElementById("loginPassword").value;
+            if (!identifier || !password) {
+                document.getElementById("loginError").textContent = "جميع الحقول مطلوبة.";
+                return;
+            }
+            let foundUser = null;
+
+            for (const userKey in users) {
+                if ((users[userKey].email === identifier || users[userKey].username === identifier) && users[userKey].password === password) {
+                    foundUser = users[userKey];
+                    break;
+                }
+            }
+            
+            if (!foundUser) {
+                document.getElementById("loginError").textContent = "بيانات الدخول غير صحيحة.";
+                return;
+            }
+            currentUser = foundUser.username;
+            showDashboard();
+        }
+
+        function logout() {
+            currentUser = null;
+            showMain();
+        }
+
+        function updateDashboard() {
+            if (!currentUser) return;
+            const user = users[currentUser];
+            document.getElementById("balance").textContent = `رصيدك: ${user.points} نقطة`;
+            updateHistoryList();
+        }
+
+        function updateHistoryList() {
+            const historyDiv = document.getElementById("historyList");
+            historyDiv.innerHTML = "<h3>سجل التحويلات</h3>";
+
+            const history = transferHistory[currentUser] || [];
+            if (history.length === 0) {
+                historyDiv.innerHTML += "<p>لا توجد تحويلات بعد.</p>";
+                return;
+            }
+            const ul = document.createElement("ul");
+            history.slice().reverse().forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = `${item.date} - ${item.type === "send" ? `أرسلت ${item.amount} نقطة إلى ${item.to}` : `استلمت ${item.amount} نقطة من ${item.from}`}`;
+                ul.appendChild(li);
+            });
+            historyDiv.appendChild(ul);
+        }
+
+        function confirmTransfer() {
+            clearMessages();
+            const amount = Number(document.getElementById("transferAmount").value);
+            const recipient = document.getElementById("recipientUsername").value.trim();
+
+            if (!amount || amount <= 0) {
+                document.getElementById("transferError").textContent = "الرجاء إدخال كمية صحيحة للنقاط.";
+                return;
+            }
+            if (!recipient) {
+                document.getElementById("transferError").textContent = "الرجاء إدخال اسم المستخدم للمستلم.";
+                return;
+            }
+            if (recipient === currentUser) {
+                document.getElementById("transferError").textContent = "لا يمكنك تحويل النقاط إلى نفسك.";
+                return;
+            }
+            if (!(recipient in users)) {
+                document.getElementById("transferError").textContent = "اسم المستخدم غير موجود.";
+                return;
+            }
+            if (users[currentUser].points < amount) {
+                document.getElementById("transferError").textContent = "رصيدك غير كافٍ.";
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من تحويل ${amount} نقطة إلى ${recipient}؟`)) {
+                return;
+            }
+
+            users[currentUser].points -= amount;
+            users[recipient].points += amount;
+
+            const date = new Date().toLocaleString("ar-EG");
+
+            if (!transferHistory[currentUser]) transferHistory[currentUser] = [];
+            if (!transferHistory[recipient]) transferHistory[recipient] = [];
+
+            transferHistory[currentUser].push({ type: "send", to: recipient, amount, date });
+            transferHistory[recipient].push({ type: "receive", from: currentUser, amount, date });
+
+            saveData();
+            updateDashboard();
+            document.getElementById("transferSuccess").textContent = "تم التحويل بنجاح!";
+            clearTransferForm();
+            setTimeout(() => {
+                showDashboard();
+            }, 2000);
+        }
+
+        function confirmSARConversion() {
+            clearMessages();
+            const pointsToConvert = Number(document.getElementById("sarAmount").value);
+
+            if (isNaN(pointsToConvert) || pointsToConvert <= 0 || pointsToConvert % sarConversionRate !== 0) {
+                document.getElementById("sarConversionError").textContent = `الرجاء إدخال عدد صحيح من النقاط (مضاعفات ${sarConversionRate} نقطة = 1 SAR).`;
+                return;
+            }
+            if (users[currentUser].points < pointsToConvert) {
+                document.getElementById("sarConversionError").textContent = "رصيدك غير كافٍ لإجراء هذا التحويل.";
+                return;
+            }
+
+            const sarEquivalent = pointsToConvert / sarConversionRate;
+
+            if (!confirm(`هل أنت متأكد من تحويل ${pointsToConvert} نقطة إلى ${sarEquivalent} SAR؟`)) {
+                return;
+            }
+
+            users[currentUser].points -= pointsToConvert;
+            saveData();
+
+            const date = new Date().toLocaleString("ar-EG");
+            adminNotifications.push({
+                id: Date.now(), // Unique ID for notification
+                type: "SAR_Conversion",
+                username: currentUser,
+                pointsConverted: pointsToConvert,
+                sarAmount: sarEquivalent,
+                date: date
+            });
+            saveData();
+
+            document.getElementById("sarConversionSuccess").textContent = `تم تحويل ${pointsToConvert} نقطة إلى ${sarEquivalent} SAR بنجاح!`;
+            updateDashboard();
+            document.getElementById("sarAmount").value = "";
+
+            setTimeout(() => {
+                showDashboard();
+            }, 2000);
+        }
+
+        function updateProfile() {
+            if (!currentUser) return;
+            const user = users[currentUser];
+            document.getElementById("profileUsername").textContent = user.username;
+            document.getElementById("profileEmail").textContent = user.email;
+            document.getElementById("profilePoints").textContent = user.points;
+
+            document.getElementById("currentPassword").value = "";
+            document.getElementById("newPassword").value = "";
+            document.getElementById("newPasswordConfirm").value = "";
+            clearMessages();
+        }
+
+        function changePassword() {
+            clearMessages();
+            const currentPw = document.getElementById("currentPassword").value;
+            const newPw = document.getElementById("newPassword").value;
+            const newPwConfirm = document.getElementById("newPasswordConfirm").value;
+            if (!currentPw || !newPw || !newPwConfirm) {
+                document.getElementById("passwordChangeError").textContent = "جميع الحقول مطلوبة.";
+                return;
+            }
+            if (currentPw !== users[currentUser].password) {
+                document.getElementById("passwordChangeError").textContent = "كلمة المرور الحالية غير صحيحة.";
+                return;
+            }
+            if (newPw !== newPwConfirm) {
+                document.getElementById("passwordChangeError").textContent = "كلمة المرور الجديدة غير متطابقتين.";
+                return;
+            }
+            if (!isStrongPassword(newPw)) {
+                document.getElementById("passwordChangeError").textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحوي حرف كبير ورقم.";
+                return;
+            }
+            users[currentUser].password = newPw;
+            saveData();
+            document.getElementById("passwordChangeSuccess").textContent = "تم تغيير كلمة المرور بنجاح!";
+            setTimeout(() => {
+                showDashboard();
+            }, 2000);
+        }
+
+        function resetPassword() {
+            clearMessages();
+            const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+            if (!email) {
+                document.getElementById("forgotError").textContent = "الرجاء إدخال البريد الإلكتروني.";
+                return;
+            }
+            if (!isValidEmail(email)) {
+                document.getElementById("forgotError").textContent = "البريد الإلكتروني غير صحيح.";
+                return;
+            }
+            let userFound = null;
+            for (const userKey in users) {
+                if (users[userKey].email === email) {
+                    userFound = users[userKey];
+                    break;
+                }
+            }
+            if (!userFound) {
+                document.getElementById("forgotError").textContent = "البريد الإلكتروني غير مسجل.";
+                return;
+            }
+            document.getElementById("forgotSuccess").textContent = `تم إرسال رابط إعادة تعيين كلمة المرور إلى ${email} (محاكاة).`;
+            document.getElementById("forgotEmail").value = "";
+        }
+
+        // -------------------------------------------------------------
+        // وظائف لوحة تحكم المسؤول
+        // -------------------------------------------------------------
+
+        function updateAdminUsersList() {
+            const container = document.getElementById("adminUsersList");
+            container.innerHTML = "";
+            clearMessages();
+
+            if (Object.keys(users).length === 0) {
+                container.textContent = "لا يوجد مستخدمون بعد.";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            for (const userKey in users) {
+                const user = users[userKey];
+                const li = document.createElement("li");
+
+                li.innerHTML = `
+                    <p><b>اسم المستخدم:</b> ${user.username} (${user.email})</p>
+                    <p><b>الرصيد:</b> <span id="adminPoints_${user.username}">${user.points}</span> نقطة</p>
+                    <p><b>مسؤول:</b> ${user.isAdmin ? 'نعم' : 'لا'}</p>
+                    <div>
+                        <input type="number" id="adminAmount_${user.username}" placeholder="تغيير الرصيد">
+                        <button class="success" onclick="adminChangePoints('${user.username}', 'add')">إضافة</button>
+                        <button class="danger" onclick="adminChangePoints('${user.username}', 'subtract')">خصم</button>
+                        <button class="toggle-admin" onclick="adminToggleAdminStatus('${user.username}')">
+                            ${user.isAdmin ? 'إزالة صلاحية المسؤول' : 'تعيين كمسؤول'}
+                        </button>
+                        <button class="danger" onclick="adminDeleteUser('${user.username}')">حذف المستخدم</button>
+                    </div>
+                `;
+                ul.appendChild(li);
+            }
+            container.appendChild(ul);
+        }
+
+        function adminChangePoints(username, type) {
+            clearMessages();
+            const amountInput = document.getElementById(`adminAmount_${username}`);
+            const amount = Number(amountInput.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById("adminMessage").className = "error";
+                document.getElementById("adminMessage").textContent = "الرجاء إدخال قيمة صحيحة وموجبة.";
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من ${type === 'add' ? 'إضافة' : 'خصم'} ${amount} نقطة من ${username}؟`)) {
+                return;
+            }
+
+            if (type === 'add') {
+                users[username].points += amount;
+                document.getElementById("adminMessage").className = "success";
+                document.getElementById("adminMessage").textContent = `تم إضافة ${amount} نقطة إلى ${username}.`;
+            } else if (type === 'subtract') {
+                if (users[username].points < amount) {
+                    document.getElementById("adminMessage").className = "error";
+                    document.getElementById("adminMessage").textContent = `رصيد ${username} غير كافٍ لخصم ${amount} نقطة.`;
+                    return;
+                }
+                users[username].points -= amount;
+                document.getElementById("adminMessage").className = "success";
+                document.getElementById("adminMessage").textContent = `تم خصم ${amount} نقطة من ${username}.`;
+            }
+
+            saveData();
+            updateAdminUsersList();
+            amountInput.value = '';
+        }
+
+        function adminDeleteUser(usernameToDelete) {
+            clearMessages();
+            if (usernameToDelete === currentUser) {
+                document.getElementById("adminMessage").className = "error";
+                document.getElementById("adminMessage").textContent = "لا يمكنك حذف حسابك الخاص كمسؤول.";
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من حذف المستخدم ${usernameToDelete}؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
+                return;
+            }
+
+            delete users[usernameToDelete];
+            delete transferHistory[usernameToDelete];
+            delete lastTaskRequestTime[usernameToDelete];
+
+            for (const userKey in transferHistory) {
+                transferHistory[userKey] = transferHistory[userKey].filter(item => {
+                    return item.to !== usernameToDelete && item.from !== usernameToDelete;
+                });
+            }
+
+            adminNotifications = adminNotifications.filter(notification => {
+                return notification.username !== usernameToDelete && notification.targetUsername !== usernameToDelete;
+            });
+            taskRequests = taskRequests.filter(request => request.username !== usernameToDelete);
+
+            saveData();
+            document.getElementById("adminMessage").className = "success";
+            document.getElementById("adminMessage").textContent = `تم حذف المستخدم ${usernameToDelete} بنجاح.`;
+            updateAdminUsersList();
+        }
+
+        function adminToggleAdminStatus(usernameToToggle) {
+            clearMessages();
+            if (usernameToToggle === currentUser) {
+                document.getElementById("adminMessage").className = "error";
+                document.getElementById("adminMessage").textContent = "لا يمكنك تغيير صلاحيات حسابك الخاص.";
+                return;
+            }
+
+            const user = users[usernameToToggle];
+            const currentStatus = user.isAdmin ? 'مسؤول' : 'عادي';
+            const newStatus = user.isAdmin ? 'عادي' : 'مسؤول';
+
+            if (!confirm(`هل أنت متأكد من تغيير حالة ${usernameToToggle} من "${currentStatus}" إلى "${newStatus}"؟`)) {
+                return;
+            }
+
+            user.isAdmin = !user.isAdmin;
+            saveData();
+            document.getElementById("adminMessage").className = "success";
+            document.getElementById("adminMessage").textContent = `تم تغيير صلاحيات ${usernameToToggle} بنجاح إلى "${newStatus}".`;
+            updateAdminUsersList();
+        }
+
+        function updateAdminNotificationsList() {
+            const container = document.getElementById("adminNotificationsList");
+            container.innerHTML = "<h3>سجل إشعارات التحويل وطلبات حذف الحساب</h3>";
+            
+            if (adminNotifications.length === 0) {
+                container.innerHTML += "<p>لا توجد إشعارات حاليًا.</p>";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            adminNotifications.slice().reverse().forEach(notification => {
+                const li = document.createElement("li");
+                let statusClass = '';
+                let detailsHtml = '';
+                let buttonsHtml = '';
+
+                if (notification.type === "SAR_Conversion") {
+                    statusClass = '';
+                    detailsHtml = `
+                        <p>المستخدم: <span>${notification.username}</span></p>
+                        <p>حول: <span>${notification.pointsConverted}</span> نقطة</p>
+                        <p>تعادل: <span>${notification.sarAmount}</span> SAR</p>
+                        <p>التاريخ: <span>${notification.date}</span></p>
+                    `;
+                } else if (notification.type === "account_deletion_request") {
+                    statusClass = 'notification-status-deletion';
+                    detailsHtml = `
+                        <p>طلب حذف حساب من: <span style="font-weight: bold;">${notification.username}</span></p>
+                        <p>التاريخ: <span>${notification.date}</span></p>
+                    `;
+                    buttonsHtml = `
+                        <div>
+                            <button class="success" onclick="approveAccountDeletion('${notification.username}', ${notification.id})">موافقة على الحذف</button>
+                            <button class="danger" onclick="rejectAccountDeletion('${notification.username}', ${notification.id})">رفض طلب الحذف</button>
+                        </div>
+                    `;
+                }
+                
+                li.innerHTML = `
+                    <p><span class="${statusClass}">${notification.type === "SAR_Conversion" ? "إشعار تحويل SAR" : "طلب حذف حساب"}</span></p>
+                    ${detailsHtml}
+                    ${buttonsHtml}
+                `;
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+        }
+
+        function clearAdminNotifications() {
+            if (confirm("هل أنت متأكد من مسح جميع إشعارات المسؤول؟ هذا الإجراء لا يمكن التراجع عنه.")) {
+                adminNotifications = [];
+                saveData();
+                updateAdminNotificationsList();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // وظائف المهام وطلباتها
+        // -------------------------------------------------------------
+
+        function addNewTask() {
+            clearMessages();
+            const description = document.getElementById("newTaskDescription").value.trim();
+            const points = Number(document.getElementById("newTaskPoints").value);
+            const assigneeType = document.getElementById("newTaskAssignee").value;
+            let assignedTo = [];
+
+            if (!description || description.length < 5) {
+                document.getElementById("adminTaskError").textContent = "الرجاء إدخال وصف للمهمة (5 أحرف على الأقل).";
+                return;
+            }
+            if (isNaN(points) || points <= 0) {
+                document.getElementById("adminTaskError").textContent = "الرجاء إدخال عدد نقاط صحيح وموجب للمهمة.";
+                return;
+            }
+
+            if (assigneeType === "specific") {
+                const usernamesInput = document.getElementById("specificUsernames").value.trim();
+                if (!usernamesInput) {
+                    document.getElementById("adminTaskError").textContent = "الرجاء إدخال أسماء المستخدمين المحددين.";
+                    return;
+                }
+                const specificUsernames = usernamesInput.split(',').map(name => name.trim()).filter(name => name !== '');
+                if (specificUsernames.length === 0) {
+                     document.getElementById("adminTaskError").textContent = "الرجاء إدخال أسماء مستخدمين صحيحة (مفصولة بفاصلة).";
+                     return;
+                }
+                for (const username of specificUsernames) {
+                    if (!(username in users) || users[username].isAdmin) { // لا يمكن تعيين مهمة للمسؤول
+                        document.getElementById("adminTaskError").textContent = `اسم المستخدم '${username}' غير موجود أو أنه مسؤول.`;
+                        return;
+                    }
+                }
+                assignedTo = specificUsernames;
+            } else {
+                assignedTo = ["all"];
+            }
+
+            const newTask = {
+                id: Date.now(),
+                description: description,
+                points: points,
+                assignedTo: assignedTo
+            };
+
+            tasks.push(newTask);
+            saveData();
+            document.getElementById("adminTaskSuccess").textContent = "تمت إضافة المهمة بنجاح!";
+            document.getElementById("newTaskDescription").value = "";
+            document.getElementById("newTaskPoints").value = "";
+            document.getElementById("newTaskAssignee").value = "all";
+            document.getElementById("specificUsernames").value = "";
+            document.getElementById("specificUsernames").classList.add("hidden");
+            updateAdminTasksList();
+        }
+
+        function deleteAdminTask(taskId) {
+            if (!confirm("هل أنت متأكد من حذف هذه المهمة؟")) {
+                return;
+            }
+            tasks = tasks.filter(task => task.id !== taskId);
+            taskRequests = taskRequests.filter(request => request.taskId !== taskId);
+            for (const user in lastTaskRequestTime) {
+                if (lastTaskRequestTime[user] && lastTaskRequestTime[user][taskId]) {
+                    delete lastTaskRequestTime[user][taskId];
+                }
+            }
+            for (const userKey in users) {
+                if (users[userKey].notifications) {
+                    users[userKey].notifications = users[userKey].notifications.filter(notif => notif.taskId !== taskId);
+                }
+            }
+            saveData();
+            updateAdminTasksList();
+            document.getElementById("adminMessage").className = "success";
+            document.getElementById("adminMessage").textContent = "تم حذف المهمة بنجاح.";
+        }
+
+        function updateAdminTasksList() {
+            const container = document.getElementById("adminTasksList");
+            container.innerHTML = "";
+            clearMessages();
+
+            if (tasks.length === 0) {
+                container.innerHTML += "<p>لا توجد مهام مضافة بعد.</p>";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            tasks.slice().reverse().forEach(task => {
+                const li = document.createElement("li");
+                let assignedToText = "جميع المستخدمين";
+                if (task.assignedTo && task.assignedTo[0] !== "all") {
+                    assignedToText = `لمستخدمين محددين: ${task.assignedTo.join(', ')}`;
+                }
+
+                li.innerHTML = `
+                    <p><b>وصف المهمة:</b> ${task.description}</p>
+                    <p><b>النقاط المحتملة:</b> <span class="task-points">${task.points}</span> نقطة</p>
+                    <p><b>معرف المهمة (ID):</b> <span style="font-weight: bold; color: #3498db;">${task.id}</span></p>
+                    <p><b>مُسندة إلى:</b> ${assignedToText}</p>
+                    <div>
+                        <button class="danger" onclick="deleteAdminTask(${task.id})">حذف المهمة</button>
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+        }
+
+        // -------------------------------------------------------------
+        // وظائف تعديل المهام
+        // -------------------------------------------------------------
+
+        function populateEditTaskForm() {
+            clearMessages();
+            const taskId = Number(document.getElementById("editTaskId").value);
+            const taskToEdit = tasks.find(task => task.id === taskId);
+            const editSection = document.getElementById("editTaskSection");
+
+            if (isNaN(taskId) || !taskToEdit) {
+                document.getElementById("adminTaskError").textContent = "الرجاء إدخال معرف مهمة (ID) صحيح وموجود.";
+                editSection.classList.add("hidden");
+                return;
+            }
+
+            editingTaskId = taskId;
+            document.getElementById("currentEditTaskId").textContent = taskToEdit.id;
+            document.getElementById("editTaskDescription").value = taskToEdit.description;
+            document.getElementById("editTaskPoints").value = taskToEdit.points;
+
+            if (taskToEdit.assignedTo && taskToEdit.assignedTo[0] === "all") {
+                document.getElementById("editTaskAssignee").value = "all";
+                document.getElementById("editSpecificUsernames").classList.add("hidden");
+                document.getElementById("editSpecificUsernames").value = "";
+            } else {
+                document.getElementById("editTaskAssignee").value = "specific";
+                document.getElementById("editSpecificUsernames").classList.remove("hidden");
+                document.getElementById("editSpecificUsernames").value = taskToEdit.assignedTo.join(', ');
+            }
+            editSection.classList.remove("hidden");
+            document.getElementById("adminTaskError").textContent = "";
+        }
+
+        function saveEditedTask() {
+            clearMessages();
+            if (editingTaskId === null) {
+                document.getElementById("editTaskError").textContent = "لا توجد مهمة محددة للتعديل.";
+                return;
+            }
+
+            const taskIndex = tasks.findIndex(task => task.id === editingTaskId);
+            if (taskIndex === -1) {
+                document.getElementById("editTaskError").textContent = "المهمة غير موجودة.";
+                return;
+            }
+
+            const newDescription = document.getElementById("editTaskDescription").value.trim();
+            const newPoints = Number(document.getElementById("editTaskPoints").value);
+            const newAssigneeType = document.getElementById("editTaskAssignee").value;
+            let newAssignedTo = [];
+
+            if (!newDescription || newDescription.length < 5) {
+                document.getElementById("editTaskError").textContent = "الرجاء إدخال وصف للمهمة (5 أحرف على الأقل).";
+                return;
+            }
+            if (isNaN(newPoints) || newPoints <= 0) {
+                document.getElementById("editTaskError").textContent = "الرجاء إدخال عدد نقاط صحيح وموجب للمهمة.";
+                return;
+            }
+
+            if (newAssigneeType === "specific") {
+                const usernamesInput = document.getElementById("editSpecificUsernames").value.trim();
+                if (!usernamesInput) {
+                    document.getElementById("editTaskError").textContent = "الرجاء إدخال أسماء المستخدمين المحددين.";
+                    return;
+                }
+                const specificUsernames = usernamesInput.split(',').map(name => name.trim()).filter(name => name !== '');
+                if (specificUsernames.length === 0) {
+                     document.getElementById("editTaskError").textContent = "الرجاء إدخال أسماء مستخدمين صحيحة (مفصولة بفاصلة).";
+                     return;
+                }
+                for (const username of specificUsernames) {
+                    if (!(username in users) || users[username].isAdmin) {
+                        document.getElementById("editTaskError").textContent = `اسم المستخدم '${username}' غير موجود أو أنه مسؤول.`;
+                        return;
+                    }
+                }
+                newAssignedTo = specificUsernames;
+            } else {
+                newAssignedTo = ["all"];
+            }
+
+            tasks[taskIndex].description = newDescription;
+            tasks[taskIndex].points = newPoints;
+            tasks[taskIndex].assignedTo = newAssignedTo;
+
+            saveData();
+            document.getElementById("editTaskSuccess").textContent = "تم حفظ تعديلات المهمة بنجاح!";
+            cancelEditTask();
+            updateAdminTasksList();
+        }
+
+        function cancelEditTask() {
+            document.getElementById("editTaskSection").classList.add("hidden");
+            document.getElementById("editTaskId").value = "";
+            editingTaskId = null;
+            clearMessages();
+        }
+
+        // Object to hold individual task cooldown intervals
+        const taskCooldownIntervals = {};
+
+        function updateTasksList() {
+            const tasksListDiv = document.getElementById("tasksList");
+            tasksListDiv.innerHTML = "<h3>المهام المتاحة</h3>";
+
+            if (!currentUser || users[currentUser].isAdmin) {
+                tasksListDiv.innerHTML = "";
+                return;
+            }
+
+            const availableTasks = tasks.filter(task => {
+                return task.assignedTo[0] === "all" || task.assignedTo.includes(currentUser);
+            });
+
+            if (availableTasks.length === 0) {
+                tasksListDiv.innerHTML += "<p>لا توجد مهام متاحة لك حاليًا.</p>";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            availableTasks.forEach(task => {
+                const li = document.createElement("li");
+                
+                const lastRequestForThisTask = (lastTaskRequestTime[currentUser] && lastTaskRequestTime[currentUser][task.id]) || 0;
+                const now = Date.now();
+                const nextAvailableTime = lastRequestForThisTask + TASK_COOLDOWN_DURATION;
+                const isCooldownActive = now < nextAvailableTime;
+
+                let buttonHtml = `<button class="complete-task" onclick="requestTaskCompletion(${task.id})">إنجاز المهمة</button>`;
+                let timerHtml = '';
+                
+                if (isCooldownActive) {
+                    buttonHtml = `<button class="complete-task" disabled>قيد الانتظار</button>`; 
+                    timerHtml = `<div id="task_timer_${task.id}" class="task-timer"></div>`;
+                    startTaskCooldownTimer(task.id, nextAvailableTime);
+                } else {
+                    if (taskCooldownIntervals[task.id]) {
+                        clearInterval(taskCooldownIntervals[task.id]);
+                        delete taskCooldownIntervals[task.id];
+                    }
+                }
+
+                li.innerHTML = `
+                    <p><b>وصف المهمة:</b> ${task.description}</p>
+                    <p><b>النقاط المحتملة:</b> <span class="task-points">${task.points}</span> نقطة</p>
+                    <div class="task-buttons">
+                        ${buttonHtml}
+                    </div>
+                    ${timerHtml}
+                `;
+                ul.appendChild(li);
+            });
+            tasksListDiv.appendChild(ul);
+        }
+
+        function startTaskCooldownTimer(taskId, nextAvailableTimestamp) {
+            if (taskCooldownIntervals[taskId]) {
+                clearInterval(taskCooldownIntervals[taskId]);
+            }
+
+            const timerElement = document.getElementById(`task_timer_${taskId}`);
+            const listItem = timerElement ? timerElement.closest('li') : null;
+            const completeButton = listItem ? listItem.querySelector('.complete-task') : null;
+
+
+            taskCooldownIntervals[taskId] = setInterval(() => {
+                const remaining = nextAvailableTimestamp - Date.now();
+                if (remaining <= 0) {
+                    if (timerElement) {
+                        timerElement.textContent = "يمكنك الآن تقديم طلب لهذه المهمة.";
+                    }
+                    if (completeButton) {
+                        completeButton.disabled = false;
+                        completeButton.textContent = "إنجاز المهمة";
+                    }
+                    clearInterval(taskCooldownIntervals[taskId]);
+                    delete taskCooldownIntervals[taskId];
+                    updateTasksList();
+                    return;
+                }
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                if (timerElement) {
+                    timerElement.textContent = `متاح بعد: ${minutes} دقيقة و ${seconds} ثانية`;
+                }
+                if (completeButton) {
+                    completeButton.disabled = true;
+                    completeButton.textContent = "قيد الانتظار";
+                }
+            }, 1000);
+        }
+
+
+        function requestTaskCompletion(taskId) {
+            if (!currentUser || users[currentUser].isAdmin) return;
+
+            const now = Date.now();
+            
+            if (!lastTaskRequestTime[currentUser]) {
+                lastTaskRequestTime[currentUser] = {};
+            }
+
+            const lastRequestForThisTask = lastTaskRequestTime[currentUser][taskId] || 0;
+
+            if (now - lastRequestForThisTask < TASK_COOLDOWN_DURATION) {
+                alert("لا يمكنك تقديم طلب لهذه المهمة إلا بعد 30 دقيقة من آخر طلب لها.");
+                return;
+            }
+
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) {
+                alert("المهمة غير موجودة.");
+                return;
+            }
+
+            const existingRequest = taskRequests.find(req => req.username === currentUser && req.taskId === taskId && req.status === "pending");
+            if (existingRequest) {
+                alert("لقد قمت بتقديم طلب لهذه المهمة بالفعل وهو قيد المراجعة.");
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد أنك أنجزت مهمة "${task.description}" وتطلب النقاط؟`)) {
+                return;
+            }
+
+            const newRequest = {
+                id: Date.now(),
+                username: currentUser,
+                taskId: taskId,
+                taskDescription: task.description,
+                points: task.points,
+                status: "pending",
+                date: new Date().toLocaleString("ar-EG")
+            };
+            taskRequests.push(newRequest);
+            
+            lastTaskRequestTime[currentUser][taskId] = now;
+            saveData();
+            alert("تم إرسال طلب إنجاز المهمة إلى المسؤول بنجاح. سيتم مراجعته.");
+            updateTasksList();
+        }
+
+        function updateAdminRequestsList() {
+            const container = document.getElementById("adminRequestsList");
+            container.innerHTML = "<h3>طلبات إنجاز المهام المعلقة</h3>";
+
+            const pendingRequests = taskRequests.filter(request => request.status === "pending");
+
+            if (pendingRequests.length === 0) {
+                container.innerHTML += "<p>لا توجد طلبات مهام معلقة حاليًا.</p>";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            pendingRequests.slice().reverse().forEach(request => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <p>المستخدم: <span>${request.username}</span></p>
+                    <p>المهمة: <span>${request.taskDescription}</span></p>
+                    <p>النقاط المقترحة: <span class="task-points">${request.points}</span></p>
+                    <p>الحالة: <span class="request-status">معلق</span></p>
+                    <p>التاريخ: <span>${request.date}</span></p>
+                    <div class="task-buttons">
+                        <button class="success" onclick="approveTaskRequest(${request.id})">موافقة</button>
+                        <button class="danger" onclick="rejectTaskRequest(${request.id})">رفض</button>
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+        }
+
+        function approveTaskRequest(requestId) {
+            const requestIndex = taskRequests.findIndex(req => req.id === requestId);
+            if (requestIndex === -1) {
+                alert("الطلب غير موجود.");
+                return;
+            }
+
+            const request = taskRequests[requestIndex];
+            if (!confirm(`هل أنت متأكد من الموافقة على طلب المهمة من ${request.username} للمهمة "${request.taskDescription}" وإضافة ${request.points} نقطة؟`)) {
+                return;
+            }
+
+            if (users[request.username]) {
+                users[request.username].points += request.points;
+                users[request.username].notifications.push({
+                    type: "task_approved",
+                    taskId: request.taskId,
+                    taskDescription: request.taskDescription,
+                    pointsEarned: request.points,
+                    date: new Date().toLocaleString("ar-EG")
+                });
+
+                taskRequests.splice(requestIndex, 1);
+                saveData();
+                alert(`تمت الموافقة بنجاح! تمت إضافة ${request.points} نقطة إلى ${request.username}.`);
+                updateAdminRequestsList();
+                updateDashboard();
+            } else {
+                alert("المستخدم المرتبط بالطلب غير موجود.");
+                taskRequests.splice(requestIndex, 1);
+                saveData();
+                updateAdminRequestsList();
+            }
+        }
+
+        function rejectTaskRequest(requestId) {
+            const requestIndex = taskRequests.findIndex(req => req.id === requestId);
+            if (requestIndex === -1) {
+                alert("الطلب غير موجود.");
+                return;
+            }
+
+            const request = taskRequests[requestIndex];
+            
+            const rejectionReason = prompt(`الرجاء إدخال سبب رفض طلب المهمة من ${request.username} للمهمة "${request.taskDescription}" (اختياري):`);
+
+            if (!confirm(`هل أنت متأكد من رفض طلب المهمة من ${request.username} للمهمة "${request.taskDescription}"؟`)) {
+                return;
+            }
+            
+            if (users[request.username]) {
+                users[request.username].notifications.push({
+                    type: "task_rejected",
+                    taskId: request.taskId,
+                    taskDescription: request.taskDescription,
+                    reason: rejectionReason || 'لا يوجد سبب محدد.',
+                    date: new Date().toLocaleString("ar-EG")
+                });
+            }
+
+            taskRequests.splice(requestIndex, 1);
+            saveData();
+            alert("تم رفض الطلب بنجاح.");
+            updateAdminRequestsList();
+        }
+
+        // -------------------------------------------------------------
+        // وظائف إعدادات SAR للمسؤول
+        // -------------------------------------------------------------
+
+        function updateSarConversionRate() {
+            clearMessages();
+            const newRateInput = document.getElementById("newSarPointsRate");
+            const newRate = Number(newRateInput.value);
+
+            if (isNaN(newRate) || newRate <= 0 || newRate % 1 !== 0) {
+                document.getElementById("sarSettingsError").textContent = "الرجاء إدخال عدد صحيح موجب لقيمة التحويل.";
+                return;
+            }
+            
+            if (!confirm(`هل أنت متأكد من تغيير قيمة التحويل إلى: كل ${newRate} نقطة = 1 SAR؟`)) {
+                return;
+            }
+
+            sarConversionRate = newRate;
+            saveData();
+            document.getElementById("sarSettingsSuccess").textContent = `تم تحديث قيمة التحويل بنجاح إلى: كل ${sarConversionRate} نقطة = 1 SAR.`;
+            document.getElementById("currentSarPointsValue").textContent = sarConversionRate;
+            newRateInput.value = sarConversionRate;
+        }
+
+        // -------------------------------------------------------------
+        // وظائف إشعارات المستخدم العادي
+        // -------------------------------------------------------------
+        function updateUserNotificationsList() {
+            const container = document.getElementById("userNotificationsList");
+            container.innerHTML = "<h3>إشعاراتي</h3>";
+
+            if (!currentUser || users[currentUser].isAdmin) {
+                container.innerHTML += "<p>ليس لديك صلاحية لعرض الإشعارات.</p>";
+                return;
+            }
+
+            const userNotifications = users[currentUser].notifications || [];
+
+            if (userNotifications.length === 0) {
+                container.innerHTML += "<p>لا توجد إشعارات جديدة.</p>";
+                return;
+            }
+
+            const ul = document.createElement("ul");
+            userNotifications.slice().reverse().forEach(notification => {
+                const li = document.createElement("li");
+                let statusClass = '';
+                let statusText = '';
+                let detailsHtml = '';
+
+                if (notification.type === "task_approved") {
+                    statusClass = 'notification-status-approved';
+                    statusText = 'مقبول';
+                    detailsHtml = `لقد تم قبول طلبك لإنجاز مهمة "<span style="font-weight: bold;">${notification.taskDescription}</span>".<br> تم إضافة <span class="task-points">${notification.pointsEarned}</span> نقطة إلى رصيدك.`;
+                } else if (notification.type === "task_rejected") {
+                    statusClass = 'notification-status-rejected';
+                    statusText = 'مرفوض';
+                    detailsHtml = `للأسف، تم رفض طلبك لإنجاز مهمة "<span style="font-weight: bold;">${notification.taskDescription}</span>".<br> السبب: ${notification.reason || 'لا يوجد سبب محدد.'}`;
+                } else if (notification.type === "account_deletion_approved") {
+                    statusClass = 'notification-status-approved';
+                    statusText = 'تم قبول طلب الحذف';
+                    detailsHtml = `لقد تم قبول طلب حذف حسابك. سيتم حذف حسابك عند تسجيل الخروج أو تحديث الصفحة.`;
+                } else if (notification.type === "account_deletion_rejected") {
+                    statusClass = 'notification-status-rejected';
+                    statusText = 'تم رفض طلب الحذف';
+                    detailsHtml = `للأسف، تم رفض طلب حذف حسابك. السبب: ${notification.reason || 'لا يوجد سبب محدد.'}`;
+                } else {
+                    statusClass = '';
+                    statusText = 'إشعار';
+                    detailsHtml = JSON.stringify(notification);
+                }
+
+                li.innerHTML = `
+                    <p><span class="${statusClass}">${statusText}</span> - ${notification.date}</p>
+                    <p>${detailsHtml}</p>
+                `;
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+        }
+
+        function clearUserNotifications() {
+            if (!currentUser || users[currentUser].isAdmin) return;
+            if (confirm("هل أنت متأكد من حذف جميع إشعاراتك؟ هذا الإجراء لا يمكن التراجع عنه.")) {
+                users[currentUser].notifications = [];
+                saveData();
+                updateUserNotificationsList();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // وظائف طلب حذف الحساب
+        // -------------------------------------------------------------
+
+        function requestAccountDeletion() {
+            if (!currentUser || users[currentUser].isAdmin) {
+                alert("لا يمكنك طلب حذف حساب مسؤول.");
+                return;
+            }
+
+            const existingRequest = adminNotifications.find(notif => 
+                notif.type === "account_deletion_request" && notif.username === currentUser
+            );
+
+            if (existingRequest) {
+                alert("لقد قمت بتقديم طلب حذف حساب بالفعل وهو قيد المراجعة.");
+                return;
+            }
+
+            if (!confirm("هل أنت متأكد من أنك تريد طلب حذف حسابك؟ سيتم إرسال طلب إلى المسؤول للموافقة عليه.")) {
+                return;
+            }
+
+            const deletionRequest = {
+                id: Date.now(),
+                type: "account_deletion_request",
+                username: currentUser,
+                date: new Date().toLocaleString("ar-EG")
+            };
+
+            adminNotifications.push(deletionRequest);
+            saveData();
+            alert("تم إرسال طلب حذف حسابك إلى المسؤول بنجاح. سيتم مراجعته.");
+            updateProfile();
+        }
+
+        function approveAccountDeletion(usernameToDelete, notificationId) {
+            if (!currentUser || !users[currentUser].isAdmin) return;
+
+            const notificationIndex = adminNotifications.findIndex(notif => notif.id === notificationId);
+            if (notificationIndex === -1) {
+                alert("الإشعار غير موجود.");
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من الموافقة على حذف حساب المستخدم ${usernameToDelete}؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
+                return;
+            }
+
+            // حذف المستخدم من جميع السجلات
+            delete users[usernameToDelete];
+            delete transferHistory[usernameToDelete];
+            delete lastTaskRequestTime[usernameToDelete];
+
+            for (const userKey in transferHistory) {
+                transferHistory[userKey] = transferHistory[userKey].filter(item => {
+                    return item.to !== usernameToDelete && item.from !== usernameToDelete;
+                });
+            }
+
+            taskRequests = taskRequests.filter(request => request.username !== usernameToDelete);
+            
+            // إزالة جميع إشعارات المستخدم المحذوف
+            for (const userKey in users) {
+                if (users[userKey].notifications) {
+                    users[userKey].notifications = users[userKey].notifications.filter(notif => notif.username !== usernameToDelete && notif.targetUsername !== usernameToDelete);
+                }
+            }
+
+            // إزالة طلب الحذف من إشعارات المسؤول
+            adminNotifications.splice(notificationIndex, 1);
+
+            saveData();
+            alert(`تم حذف حساب المستخدم ${usernameToDelete} بنجاح.`);
+            updateAdminNotificationsList();
+            updateAdminUsersList(); // تحديث قائمة المستخدمين
+        }
+
+        function rejectAccountDeletion(username, notificationId) {
+            if (!currentUser || !users[currentUser].isAdmin) return;
+
+            const notificationIndex = adminNotifications.findIndex(notif => notif.id === notificationId);
+            if (notificationIndex === -1) {
+                alert("الإشعار غير موجود.");
+                return;
+            }
+
+            const rejectionReason = prompt(`الرجاء إدخال سبب رفض طلب حذف حساب ${username} (اختياري):`);
+
+            if (!confirm(`هل أنت متأكد من رفض طلب حذف حساب المستخدم ${username}?`)) {
+                return;
+            }
+
+            if (users[username]) {
+                users[username].notifications.push({
+                    type: "account_deletion_rejected",
+                    reason: rejectionReason || 'لا يوجد سبب محدد.',
+                    date: new Date().toLocaleString("ar-EG")
+                });
+            }
+
+            // إزالة طلب الحذف من إشعارات المسؤول
+            adminNotifications.splice(notificationIndex, 1);
+            saveData();
+            alert(`تم رفض طلب حذف حساب المستخدم ${username}.`);
+            updateAdminNotificationsList();
+        }
+
+        // -------------------------------------------------------------
+        // وظائف المودال لخدمة العملاء
+        // -------------------------------------------------------------
+        function openCustomerServiceModal() {
+            document.getElementById('customerServiceModal').classList.add('show');
+        }
+
+        function closeCustomerServiceModal() {
+            document.getElementById('customerServiceModal').classList.remove('show');
+        }
+
+        function copyPhoneNumber(phoneNumber) {
+            navigator.clipboard.writeText(phoneNumber).then(() => {
+                alert('تم نسخ رقم الهاتف!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // عند تحميل الصفحة
+        showMain();
+    </script>
+</body>
+</html>
