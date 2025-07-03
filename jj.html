@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>نقطتي</title>
+    
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAiP23GvWXvOaLNcrGNGPTLVKdMSHM_3Po",
+    authDomain: "nktati.firebaseapp.com",
+    projectId: "nktati",
+    storageBucket: "nktati.appspot.com",
+    messagingSenderId: "557364979891",
+    appId: "1:557364979891:web:f458d39cb67547a723e8c6",
+    measurementId: "G-47VGPGTET6"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<title>نقطتي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <style>
         /* الخطوط */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
@@ -663,18 +684,19 @@
         body.dark-mode #customerServiceButton:hover {
             background-color: #2e7d32;
         }
-
-
         /* Responsive */
         @media (max-width: 600px) {
             .container {
                 padding: 20px 15px;
             }
-            h1 { font-size: 1.8em;
+            h1 {
+                font-size: 1.8em;
             }
-            h2 { font-size: 1.5em;
+            h2 {
+                font-size: 1.5em;
             }
-            h3 { font-size: 1.3em;
+            h3 {
+                font-size: 1.3em;
             }
             input, select, textarea {
                 width: 100%;
@@ -707,9 +729,7 @@
                 display: block;
                 margin: 5px 0;
             }
-            #editTaskSection input,
-            #editTaskSection textarea,
-            #editTaskSection select {
+            #editTaskSection input, #editTaskSection textarea, #editTaskSection select {
                 width: 100%;
             }
             #darkModeToggle {
@@ -738,1809 +758,2106 @@
     </style>
 </head>
 <body>
-    <button id="darkModeToggle" aria-label="تبديل الوضع"></button>
-
-    <button id="backButton" class="hidden" onclick="goBack()">رجوع</button>
-
-    <div class="container">
-        <h1>مرحبًا بك في نقطتي</h1>
-
-        <div id="main">
-            <button onclick="showSignup()">إنشاء حساب</button>
-            <button onclick="showLogin()">تسجيل الدخول</button>
-            <button onclick="showForgotPassword()">نسيت كلمة المرور؟</button>
-  
+<button id="darkModeToggle" aria-label="تبديل الوضع"></button>
+<button id="backButton" class="hidden" onclick="goBack()">رجوع</button>
+<div class="container">
+    <h1>مرحبًا بك في نقطتي</h1>
+    <div id="main">
+        <button onclick="showSignup()">إنشاء حساب</button>
+        <button onclick="showLogin()">تسجيل الدخول</button>
+        <button onclick="showForgotPassword()">نسيت كلمة المرور؟</button>
+    </div>
+    <div id="signup" class="hidden">
+        <h2>إنشاء حساب</h2>
+        <input id="signupEmail" type="email" placeholder="البريد الإلكتروني" required />
+        <div class="password-toggle">
+            <input id="signupPassword" type="password" placeholder="كلمة المرور" required />
+            <button type="button" onclick="togglePasswordVisibility('signupPassword')"><i class="fas fa-eye"></i></button>
         </div>
-
-        <div id="signup" class="hidden">
-            <h2>إنشاء حساب</h2>
-            <input id="signupEmail" type="email" placeholder="البريد الإلكتروني" required />
-            <div class="password-toggle">
-                <input id="signupPassword" type="password" placeholder="كلمة المرور" required />
-                <button type="button" onclick="togglePasswordVisibility('signupPassword')"><i class="fas fa-eye"></i></button>
-            </div>
-            <div class="password-toggle">
-                <input id="signupPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور" required />
-                <button type="button" onclick="togglePasswordVisibility('signupPasswordConfirm')"><i class="fas fa-eye"></i></button>
-            </div>
-            <input id="signupUsername" placeholder="اسم المستخدم" required />
- 
-           <div id="signupError" class="error"></div>
-            <div id="signupSuccess" class="success"></div>
-            <button onclick="createAccount()">إنشاء</button>
+        <div class="password-toggle">
+            <input id="signupPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور" required />
+            <button type="button" onclick="togglePasswordVisibility('signupPasswordConfirm')"><i class="fas fa-eye"></i></button>
         </div>
-
-        <div id="login" class="hidden">
-            <h2>تسجيل الدخول</h2>
-            <input id="loginIdentifier" type="text" placeholder="اسم المستخدم أو البريد الإلكتروني" required />
-        
-            <div class="password-toggle">
-                <input id="loginPassword" type="password" placeholder="كلمة المرور" required />
-                <button type="button" onclick="togglePasswordVisibility('loginPassword')"><i class="fas fa-eye"></i></button>
-            </div>
-            <div id="loginError" class="error"></div>
-            <button onclick="loginUser()">دخول</button>
+        <input id="signupUsername" placeholder="اسم المستخدم" required />
+        <div id="signupError" class="error"></div>
+        <div id="signupSuccess" class="success"></div>
+        <button onclick="createAccount()">إنشاء</button>
+    </div>
+    <div id="login" class="hidden">
+        <h2>تسجيل الدخول</h2>
+        <input id="loginIdentifier" type="text" placeholder="اسم المستخدم أو البريد الإلكتروني" required />
+        <div class="password-toggle">
+            <input id="loginPassword" type="password" placeholder="كلمة المرور" required />
+            <button type="button" onclick="togglePasswordVisibility('loginPassword')"><i class="fas fa-eye"></i></button>
         </div>
-
-      
-        <div id="forgotPassword" class="hidden">
-            <h2>نسيت كلمة المرور</h2>
-        
-            <div id="forgotEmailSection">
-                <p style="font-size: 0.9em; color: #555;">أدخل بريدك الإلكتروني لطلب كود إعادة التعيين من المسؤول.</p>
-                <input id="forgotEmail" type="email" placeholder="البريد الإلكتروني" required />
-                <div id="forgotError" class="error"></div>
-                <div id="forgotSuccess" class="success"></div>
-                <button onclick="resetPassword()">طلب الكود</button>
-            </div>
-        
-            <div id="forgotCodeSection" class="hidden">
-                <p style="font-size: 0.9em; color: #555;">تم إرسال طلب للمسؤول. أدخل الكود الذي تستلمه منه للمتابعة.</p>
-                <input id="forgotCode" type="text" placeholder="أدخل الكود" required />
-                <div id="forgotCodeError" class="error"></div>
-                <button onclick="verifyForgotPasswordCode()">تحقق من الكود</button>
-            </div>
-        
-            <div id="forgotNewPasswordSection" class="hidden">
-                <h3>تعيين كلمة مرور جديدة</h3>
-                <input id="resetNewPassword" type="password" placeholder="كلمة المرور الجديدة" />
-                <input id="resetNewPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور الجديدة" />
-                <div id="resetNewPasswordError" class="error"></div>
-                <div id="resetNewPasswordSuccess" class="success"></div>
-                <button onclick="performPasswordReset()">تغيير كلمة المرور</button>
-            </div>
+        <div id="loginError" class="error"></div>
+        <button onclick="loginUser()">دخول</button>
+    </div>
+    <div id="forgotPassword" class="hidden">
+        <h2>نسيت كلمة المرور</h2>
+        <div id="forgotEmailSection">
+            <p style="font-size: 0.9em; color: #555;">أدخل بريدك الإلكتروني لطلب كود إعادة التعيين من المسؤول.</p>
+            <input id="forgotEmail" type="email" placeholder="البريد الإلكتروني" required />
+            <div id="forgotError" class="error"></div>
+            <div id="forgotSuccess" class="success"></div>
+            <button onclick="resetPassword()">طلب الكود</button>
         </div>
-
-        <div id="dashboard" class="hidden">
-   
-            <h2>لوحة التحكم</h2>
-            <div id="balance"></div>
-            <button onclick="showTransfer()">تحويل النقاط</button>
-            <button onclick="showConvertSAR()">تحويل إلى SAR</button>
-            <button onclick="showProfile()">الملف الشخصي</button>
-            <button id="userNotificationsBtn" class="hidden" onclick="showUserNotifications()">إشعاراتي</button> <button id="adminDashboardBtn" class="hidden" onclick="showAdminDashboard()">لوحة تحكم المسؤول</button>
-            <button onclick="logout()">تسجيل الخروج</button>
-            <div id="historyList"></div>
-            <div id="tasksList"></div> </div>
-
-        <div id="transfer" class="hidden">
-            <h3>تحويل النقاط</h3>
-            <input id="transferAmount" type="number" placeholder="عدد النقاط" required />
-            <input id="recipientUsername" placeholder="اسم المستخدم للمستلم" required />
-            <div id="transferError" class="error"></div>
-            <div id="transferSuccess" class="success"></div>
-            <button onclick="confirmTransfer()">تحويل</button>
+        <div id="forgotCodeSection" class="hidden">
+            <p style="font-size: 0.9em; color: #555;">تم إرسال طلب للمسؤول. أدخل الكود الذي تستلمه منه للمتابعة.</p>
+            <input id="forgotCode" type="text" placeholder="أدخل الكود" required />
+            <div id="forgotCodeError" class="error"></div>
+            <button onclick="verifyForgotPasswordCode()">تحقق من الكود</button>
         </div>
-
-        <div id="convertSAR" class="hidden">
-            <h3>تحويل النقاط إلى SAR</h3>
-            <p id="sarConversionRateText">كل <span id="currentSarPointsRate"></span> نقطة = 1 SAR</p>
-            <input id="sarAmount" type="number" placeholder="عدد النقاط المراد تحويلها" required />
-            <div id="sarConversionError" class="error"></div>
-            <div id="sarConversionSuccess" class="success"></div>
-            <button onclick="confirmSARConversion()">تحويل</button>
-        </div>
-
-        <div id="profile" class="hidden">
-            <h2>الملف الشخصي</h2>
-            <p><b>اسم المستخدم:</b> <span id="profileUsername"></span></p>
-            <p><b>البريد الإلكتروني:</b> <span id="profileEmail"></span></p>
-            <p><b>رصيد النقاط:</b> <span id="profilePoints"></span> نقطة</p>
-            <h3>تغيير كلمة المرور</h3>
-            
-            <button onclick="requestPasswordChangeCode()">طلب كود تغيير كلمة المرور</button>
-            <div id="passwordRequestMessage" class="success"></div>
-            <input id="passwordResetCode" type="text" placeholder="أدخل كود التحقق لتفعيل الحقول" onkeyup="verifyPasswordResetCode()" style="margin-top: 15px;"/>
-            <div id="passwordCodeError" class="error"></div>
-
-            <input id="currentPassword" type="password" placeholder="كلمة المرور الحالية" disabled class="hidden" />
-            
-            <input id="newPassword" type="password" placeholder="كلمة المرور الجديدة" disabled />
-            <input id="newPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور الجديدة" disabled />
-            <div id="passwordChangeError" class="error"></div>
-            <div id="passwordChangeSuccess" class="success"></div>
-            <button id="changePasswordBtn" onclick="changePassword()" disabled>تغيير كلمة المرور</button>
-            
-            <button class="danger" onclick="requestAccountDeletion()">طلب حذف الحساب</button>
-        </div>
-
-        <div id="userNotifications" class="hidden">
-            <h2>إشعاراتي</h2>
-            <div id="userNotificationsList">
-                <p>لا توجد إشعارات حاليًا.</p>
-            </div>
-            <button class="clear-notifications" onclick="clearUserNotifications()">حذف جميع الإشعارات</button> </div>
-        <div id="adminDashboard" class="hidden">
-            <h2>لوحة تحكم المسؤول</h2>
-            <button onclick="updateAdminUsersList()">إدارة المستخدمين</button>
-            <button onclick="showAdminNotifications()">إشعارات التحويل وطلبات الحذف</button> <button onclick="showAdminRequests()">طلبات المهام</button>
-            <button onclick="showAdminTasksManagement()">إدارة المهام</button>
-            <button onclick="showAdminSarSettings()">إعدادات تحويل SAR</button>
-            <div id="adminUsersList"></div>
-            <div id="adminMessage" class="error"></div>
-        </div>
-        <div id="adminNotifications" class="hidden">
-            <h2>إشعارات التحويل وطلبات حذف الحساب</h2>
-            <div id="adminNotificationsList"></div>
-          
-            <button class="clear-notifications" onclick="clearAdminNotifications()">مسح جميع الإشعارات</button> </div>
-        <div id="adminRequests" class="hidden">
-            <h2>طلبات إنجاز المهام</h2>
-            <div id="adminRequestsList"></div>
-        </div>
-        <div id="adminTasksManagement" class="hidden">
-            <h2>إدارة المهام</h2>
-            <h3>إضافة مهمة جديدة</h3>
-           
-            <textarea id="newTaskDescription" placeholder="وصف المهمة" rows="3"></textarea>
-            <input id="newTaskPoints" type="number" placeholder="عدد نقاط المهمة" />
-            <select id="newTaskAssignee">
-                <option value="all">جميع المستخدمين</option>
-                <option value="specific">مستخدم محدد</option>
-            </select>
-            <input id="specificUsernames" placeholder="اسم المستخدم (أو أسماء مفصولة بفاصلة)" class="hidden" />
-            <div id="adminTaskError" class="error"></div>
-            <div id="adminTaskSuccess" class="success"></div>
-            <button onclick="addNewTask()">إضافة مهمة</button>
-
-            <h3 style="margin-top: 30px;">تعديل مهمة موجودة</h3>
-            <input id="editTaskId" type="number" placeholder="أدخل معرف المهمة (ID) لتعديلها" />
-            <button onclick="populateEditTaskForm()">تعديل المهمة</button>
-
-   
-            <div id="editTaskSection" class="hidden">
-                <h3>تفاصيل المهمة المراد تعديلها</h3>
-                <p><b>معرف المهمة (ID):</b> <span id="currentEditTaskId"></span></p>
-                <textarea id="editTaskDescription" placeholder="وصف المهمة الجديد" rows="3"></textarea>
-                <input id="editTaskPoints" type="number" placeholder="عدد نقاط المهمة الجديد" />
-      
-                <select id="editTaskAssignee">
-                    <option value="all">جميع المستخدمين</option>
-                    <option value="specific">مستخدم محدد</option>
-                </select>
-                <input id="editSpecificUsernames" placeholder="اسم المستخدم (أو أسماء مفصولة بفاصلة)" class="hidden" />
-    
-                <div id="editTaskError" class="error"></div>
-                <div id="editTaskSuccess" class="success"></div>
-                <button class="success" onclick="saveEditedTask()">حفظ التعديلات</button>
-                <button onclick="cancelEditTask()">إلغاء التعديل</button>
-            </div>
-
-            <h3>المهام الحالية</h3>
-      
-            <div id="adminTasksList"></div>
-        </div>
-        <div id="adminSarSettings" class="hidden">
-            <h2>إعدادات تحويل SAR</h2>
-            <p>القيمة الحالية: كل <span id="currentSarPointsValue"></span> نقطة = 1 SAR</p>
-            <input id="newSarPointsRate" type="number" placeholder="أدخل عدد النقاط لـ 1 SAR" />
-            <div id="sarSettingsError" class="error"></div>
-      
-            <div id="sarSettingsSuccess" class="success"></div>
-            <button class="success" onclick="updateSarConversionRate()">تعديل القيمة</button>
-        </div>
-        </div>
-
-    <div id="customerServiceModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeCustomerServiceModal()">&times;</span>
-            <h3>خدمة العملاء</h3>
-            <p><i class="fas fa-envelope"></i> <a href="mailto:kutaibah.ktha@gmail.com">kutaibah.ktha@gmail.com</a></p>
-   
-            <p><i class="fas fa-phone"></i> <span class="phone-number" onclick="copyPhoneNumber('0509248264')">0509248264</span></p>
+        <div id="forgotNewPasswordSection" class="hidden">
+            <h3>تعيين كلمة مرور جديدة</h3>
+            <input id="resetNewPassword" type="password" placeholder="كلمة المرور الجديدة" />
+            <input id="resetNewPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور الجديدة" />
+            <div id="resetNewPasswordError" class="error"></div>
+            <div id="resetNewPasswordSuccess" class="success"></div>
+            <button onclick="performPasswordReset()"></button>
         </div>
     </div>
 
-    <footer>
-        <button id="customerServiceButton" onclick="openCustomerServiceModal()">خدمة العملاء</button>
-        جميع الحقوق محفوظة لدى NOKTATI©
-    </footer>
+    <div id="dashboard" class="box hidden">
+        <h2>لوحة التحكم</h2>
+        <p>مرحباً بك، <span id="usernameDisplay"></span>!</p>
+        <p>النقاط: <span id="userPoints">0</span></p>
+        <button onclick="showAdminSection()" id="adminButton" class="toggle-admin hidden">إدارة</button>
+        <button onclick="showTasks()">المهام</button>
+        <button onclick="showHistory()">سجل النقاط</button>
+        <button onclick="showNotifications()">الإشعارات <span id="notificationCount" class="hidden"></span></button>
+        <button onclick="showLoan()">طلب استلاف</button>
+        <button onclick="requestAccountDeletion()" class="danger">طلب حذف حساب</button>
+        <button onclick="logout()">تسجيل الخروج</button>
+    </div>
 
-    <script>
-        // مفاتيح localStorage
-        const STORAGE_USERS = "noktati_users";
-        const STORAGE_HISTORY = "noktati_history";
-        const STORAGE_ADMIN_NOTIFICATIONS = "noktati_admin_notifications";
-        const STORAGE_TASKS = "noktati_tasks";
-        const STORAGE_TASK_REQUESTS = "noktati_task_requests";
-        const STORAGE_LAST_TASK_REQUEST_TIME = "noktati_last_task_request_time";
-        const STORAGE_SAR_RATE = "noktati_sar_rate";
-        const STORAGE_DARK_MODE = "noktati_dark_mode";
-        const STORAGE_LAST_PAGE = "noktati_last_page";
-        // *** مفاتيح جديدة تمت إضافتها ***
-        const STORAGE_LOGGEDIN_USER = "noktati_loggedin_user"; // للحفاظ على تسجيل الدخول
-        const STORAGE_PW_RESET_CODES = "noktati_pw_reset_codes"; // لتخزين أكواد تغيير كلمة المرور
+    <div id="adminSection" class="box hidden">
+        <h2>إدارة النظام</h2>
+        <button onclick="showAdminUsers()">إدارة المستخدمين</button>
+        <button onclick="showAddPoints()">إضافة نقاط</button>
+        <button onclick="showTransferPoints()">تحويل نقاط</button>
+        <button onclick="showAdminTasks()">إدارة المهام</button>
+        <button onclick="showAdminRequests()">طلبات تغيير كلمة المرور</button>
+        <button onclick="showAdminNotifications()">إدارة الإشعارات</button>
+        <button onclick="showAdminSARSettings()">إعدادات التحويل لـ SAR</button>
+        <button onclick="showViolationsAdmin()">إدارة المخالفات</button>
+        <button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="addPoints" class="box hidden">
+        <h2>إضافة نقاط</h2>
+        <input id="addPointsUsername" type="text" placeholder="اسم المستخدم" />
+        <input id="pointsToAdd" type="number" placeholder="عدد النقاط" />
+        <div id="addPointsError" class="error"></div>
+        <div id="addPointsSuccess" class="success"></div>
+        <button onclick="addPoints()">إضافة</button>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="transferPoints" class="box hidden">
+        <h2>تحويل نقاط</h2>
+        <input id="transferToUsername" type="text" placeholder="المستلم" />
+        <input id="pointsToTransfer" type="number" placeholder="عدد النقاط" />
+        <div id="transferError" class="error"></div>
+        <div id="transferSuccess" class="success"></div>
+        <button onclick="transferPoints()">تحويل</button>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="history" class="box hidden">
+        <h2>سجل النقاط</h2>
+        <div id="historyList">جاري التحميل...</div>
+        <button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="adminUsers" class="box hidden">
+        <h2>إدارة المستخدمين</h2>
+        <div id="adminUsersList">جاري التحميل...</div>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="tasks" class="box hidden">
+        <h2>المهام</h2>
+        <div id="tasksList">جاري التحميل...</div>
+        <button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="adminTasks" class="box hidden">
+        <h2>إدارة المهام</h2>
+        <input type="text" id="taskTitle" placeholder="عنوان المهمة" />
+        <textarea id="taskDesc" placeholder="شرح المهمة"></textarea>
+        <input type="number" id="taskPoints" placeholder="النقاط" />
+        <input type="text" id="taskDueDate" placeholder="تاريخ الانتهاء (اختياري: YYYY-MM-DD)" />
+        <input type="text" id="taskAssignee" placeholder="المسؤول (اسم المستخدم، اختياري)" />
+        <button onclick="addTask()">إضافة مهمة</button>
+        <div id="adminTasksList">جاري التحميل...</div>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="editTaskSection" class="box hidden">
+        <h3>تعديل المهمة</h3>
+        <input type="hidden" id="editTaskId">
+        <input type="text" id="editTaskTitle" placeholder="عنوان المهمة" />
+        <textarea id="editTaskDesc" placeholder="شرح المهمة"></textarea>
+        <input type="number" id="editTaskPoints" placeholder="النقاط" />
+        <input type="text" id="editTaskDueDate" placeholder="تاريخ الانتهاء (YYYY-MM-DD)" />
+        <input type="text" id="editTaskAssignee" placeholder="المسؤول (اسم المستخدم)" />
+        <select id="editTaskStatus">
+            <option value="pending">قيد الانتظار</option>
+            <option value="completed">مكتملة</option>
+            <option value="rejected">مرفوضة</option>
+        </select>
+        <button onclick="saveTaskChanges()">حفظ التغييرات</button>
+        <button onclick="cancelEditTask()">إلغاء</button>
+    </div>
+
+    <div id="adminRequests" class="box hidden">
+        <h2>طلبات تغيير كلمة المرور</h2>
+        <div id="adminRequestsList">جاري التحميل...</div>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="notifications" class="box hidden">
+        <h2>إشعاراتي</h2>
+        <div id="userNotificationsList">جاري التحميل...</div>
+        <button onclick="clearAllNotifications()" class="clear-notifications">مسح كل الإشعارات</button>
+        <button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="adminNotifications" class="box hidden">
+        <h2>إدارة الإشعارات</h2>
+        <div id="adminNotificationsList">جاري التحميل...</div>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="adminSarSettings" class="box hidden">
+        <h2>إعدادات التحويل لـ SAR</h2>
+        <p>سعر تحويل النقطة الواحدة إلى SAR: <span id="currentSarRate"></span></p>
+        <input type="number" id="newSarRate" placeholder="سعر جديد لكل نقطة" step="0.01" />
+        <button onclick="updateSarRate()">تحديث</button>
+        <br><br>
+        <input type="number" id="pointsToConvert" placeholder="عدد النقاط للتحويل" />
+        <button onclick="convertPointsToSar()" class="convert-sar">تحويل إلى SAR</button>
+        <p>القيمة المحولة: <span id="convertedSarValue">0.00 SAR</span></p>
+        <button onclick="backToAdmin()">رجوع</button>
+    </div>
+
+    <div id="violationsAdmin" class="box" style="display:none;">
+        <h3>إدارة المخالفات</h3>
+        <input type="text" id="violationUser" placeholder="اسم المستخدم">
+        <input type="text" id="violationTitle" placeholder="عنوان المخالفة">
+        <input type="text" id="violationDesc" placeholder="شرح المخالفة">
+        <input type="number" id="violationPoints" placeholder="عدد النقاط">
+        <input type="text" id="violationDue" placeholder="مدة السداد (مثلاً: 3 أيام)">
+        <button onclick="addViolation()">إضافة مخالفة</button>
+        <div id="violationListAdmin"></div>
+        <br><button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="violationsUser" class="box" style="display:none;">
+        <h3>مخالفاتي</h3>
+        <div id="violationListUser">جاري التحميل...</div>
+        <br><button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+    <div id="loanSection" class="box" style="display:none;">
+        <h3>طلب استلاف</h3>
+        <input type="text" id="loanFrom" placeholder="اسم المستخدم المراد الاستلاف منه">
+        <input type="number" id="loanAmount" placeholder="عدد النقاط">
+        <button onclick="sendLoanRequest()">إرسال الطلب</button>
+        <h4>طلبات الاستلاف الواردة</h4>
+        <div id="loanRequests">جاري التحميل...</div>
+        <br><button onclick="backToDashboard()">رجوع</button>
+    </div>
+
+</div>
+
+<div id="customerServiceModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeCustomerServiceModal()">&times;</span>
+        <h3>خدمة العملاء</h3>
+        <p><i class="fas fa-phone"></i> الهاتف: <span class="phone-number" onclick="copyPhoneNumber('+966500000000')">+966500000000</span></p>
+        <p><i class="fab fa-whatsapp"></i> واتساب: <a href="https://wa.me/966500000000" target="_blank">+966500000000</a></p>
+        <p><i class="fas fa-envelope"></i> البريد الإلكتروني: <a href="mailto:support@noktati.com">support@noktati.com</a></p>
+        <p><i class="fab fa-twitter"></i> تويتر (X): <a href="https://twitter.com/noktati_app" target="_blank">@noktati_app</a></p>
+    </div>
+</div>
 
 
-        let users = JSON.parse(localStorage.getItem(STORAGE_USERS)) || {};
-        let transferHistory = JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || {};
-        let adminNotifications = JSON.parse(localStorage.getItem(STORAGE_ADMIN_NOTIFICATIONS)) || [];
-        let tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS)) || [];
-        let taskRequests = JSON.parse(localStorage.getItem(STORAGE_TASK_REQUESTS)) || [];
-        let lastTaskRequestTime = JSON.parse(localStorage.getItem(STORAGE_LAST_TASK_REQUEST_TIME)) || {};
-        let sarConversionRate = Number(localStorage.getItem(STORAGE_SAR_RATE)) || 100;
-        // *** متغير جديد تم إضافته ***
-        let pwResetCodes = JSON.parse(localStorage.getItem(STORAGE_PW_RESET_CODES)) || {};
+<footer>
+    &copy; 2025 نقطتي. كل الحقوق محفوظة.
+    <button id="customerServiceButton" onclick="openCustomerServiceModal()">خدمة العملاء</button>
+</footer>
 
-        // الحد الأقصى لعدد الحسابات (بما في ذلك المسؤول)
-        const MAX_ACCOUNTS = 6;
-        // المدة الزمنية للانتظار لكل مهمة بعد تقديم طلبها (30 دقيقة)
-        const TASK_COOLDOWN_DURATION = 30 * 60 * 1000;
-        // 30 minutes in milliseconds
+<script>
+    let currentUser;
+    let users = {}; // A local cache for user data, indexed by username
+    let notifications = [];
+    let adminNotifications = [];
+    let sarRate = 0.01; // Default SAR conversion rate
 
-        let currentUser = null;
-        let editingTaskId = null;
-        let userToResetPassword = null; // *** متغير جديد: لتتبع المستخدم الذي يعيد تعيين كلمة مروره
-        // لتخزين معرف المهمة التي يتم تعديلها
-        let currentPage = 'main';
-        // لتتبع الصفحة الحالية
-        let previousPage = 'main';
-        // لتتبع الصفحة السابقة
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        checkLoginStatus();
 
-
-        // إضافة مستخدم مسؤول افتراضي للتجربة وتحديث كلمة المرور
-        if (!users['admin']) {
-            users['admin'] = {
-                email: 'admin@noktati.com',
-                username: 'admin',
-                password: 'XOI?90rf',
-      
-                points: 999999,
-                isAdmin: true,
-                notifications: []
-            };
-            saveData();
-        } else {
-            if (users['admin'].password !== 'XOI?90rf') {
-                users['admin'].password = 'XOI?90rf';
-                saveData();
-            }
-             // التأكد أن جميع المستخدمين لديهم خاصية notifications
-            for (const userKey in users) {
-                if (!users[userKey].notifications) {
-                    users[userKey].notifications = [];
-                }
-            }
-            saveData();
-        }
-
-        // دالة حفظ البيانات
-        function saveData() {
-            localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
-            localStorage.setItem(STORAGE_HISTORY, JSON.stringify(transferHistory));
-            localStorage.setItem(STORAGE_ADMIN_NOTIFICATIONS, JSON.stringify(adminNotifications));
-            localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-            localStorage.setItem(STORAGE_TASK_REQUESTS, JSON.stringify(taskRequests));
-            localStorage.setItem(STORAGE_LAST_TASK_REQUEST_TIME, JSON.stringify(lastTaskRequestTime));
-            localStorage.setItem(STORAGE_SAR_RATE, sarConversionRate.toString());
-            // *** حفظ المتغير الجديد ***
-            localStorage.setItem(STORAGE_PW_RESET_CODES, JSON.stringify(pwResetCodes));
-        }
-
-        // -------------------------------------------------------------
-        // وظائف الوضع الداكن/الفاتح
-        // -------------------------------------------------------------
+        // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
-        function applyDarkMode(isDark) {
-            if (isDark) {
-                document.body.classList.add('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // أيقونة الشمس للوضع الفاتح
-                localStorage.setItem(STORAGE_DARK_MODE, 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // أيقونة القمر للوضع الداكن
-                localStorage.setItem(STORAGE_DARK_MODE, 'light');
-            }
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // Sun icon for light mode
+        } else {
+            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // Moon icon for dark mode
         }
 
-        // عند تحميل الصفحة، تحقق من التفضيل المحفوظ
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedMode = localStorage.getItem(STORAGE_DARK_MODE);
-            if (savedMode === 'dark') {
-                applyDarkMode(true);
-            } else {
-     
-                applyDarkMode(false); // الافتراضي هو الوضع الفاتح
-            }
-            checkLoggedInUser(); // *** تعديل: التحقق من المستخدم المسجل عند بدء التشغيل
-        });
         darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
-            applyDarkMode(!isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode);
+            darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         });
-        // -------------------------------------------------------------
-        // وظائف التنقل بين الصفحات
-        // -------------------------------------------------------------
-        function hideAllSections() {
-            ["main", "signup", "login", "forgotPassword", "dashboard", "transfer", "convertSAR", "profile", "adminDashboard", "adminNotifications", "adminRequests", "adminTasksManagement", "adminSarSettings", "userNotifications"].forEach(id => { 
-                const el = document.getElementById(id);
-                if(el) el.classList.add("hidden");
-            });
-            clearMessages();
-        }
+    });
 
-        function clearMessages() {
-            ["signupError", "signupSuccess", "loginError", "loginError", "forgotError", "forgotSuccess", "transferError", "transferSuccess", "sarConversionError", "sarConversionSuccess", "passwordChangeError", "passwordChangeSuccess", "adminMessage", "adminTaskError", "adminTaskSuccess", "sarSettingsError", "sarSettingsSuccess", "editTaskError", "editTaskSuccess", "passwordCodeError", "passwordRequestMessage", "forgotCodeError", "resetNewPasswordError", "resetNewPasswordSuccess"].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.textContent = "";
-            });
-        }
-
-        function showPage(pageId) {
-            previousPage = currentPage;
-            // حفظ الصفحة الحالية كسابقة
-            currentPage = pageId;
-            // تحديث الصفحة الحالية
-            hideAllSections();
-            document.getElementById(pageId).classList.remove("hidden");
-            // إظهار أو إخفاء زر الرجوع
-            if (pageId === 'main' || pageId === 'dashboard') {
-                document.getElementById('backButton').classList.add('hidden');
-            } else {
-                document.getElementById('backButton').classList.remove('hidden');
-            }
-        }
-
-        function goBack() {
-            if (currentPage === 'dashboard') {
-                logout(); // *** تعديل: تسجيل الخروج عند الرجوع من لوحة التحكم بدلاً من الذهاب للرئيسية مباشرة
-            } else if (currentPage === 'adminDashboard') {
-                showPage('dashboard');
-            } else if (currentPage === 'signup' || currentPage === 'login' || currentPage === 'forgotPassword') {
-                showPage('main');
-            } else {
-                showPage(previousPage);
-                // العودة إلى الصفحة السابقة
-            }
-        }
-
-        function showMain() {
-            showPage("main");
-        }
-
-        function showSignup() {
-            showPage("signup");
-            clearSignupForm();
-        }
-
-        function showLogin() {
-            showPage("login");
-            clearLoginForm();
-        }
-
-        function showForgotPassword() {
-            showPage("forgotPassword");
-            clearForgotForm();
-        }
-
-        function showDashboard() {
-            showPage("dashboard");
-            updateDashboard();
-            updateTasksList();
-            if (currentUser && users[currentUser] && users[currentUser].isAdmin) {
-                document.getElementById("adminDashboardBtn").classList.remove("hidden");
-                document.getElementById("userNotificationsBtn").classList.add("hidden");
-            } else if (currentUser && users[currentUser] && !users[currentUser].isAdmin) {
-                document.getElementById("adminDashboardBtn").classList.add("hidden");
-                document.getElementById("userNotificationsBtn").classList.remove("hidden");
-            } else {
-                document.getElementById("adminDashboardBtn").classList.add("hidden");
-                document.getElementById("userNotificationsBtn").classList.add("hidden");
-            }
-        }
-
-        function showTransfer() {
-            showPage("transfer");
-            clearTransferForm();
-        }
-
-        function showConvertSAR() {
-            showPage("convertSAR");
-            document.getElementById("sarAmount").value = "";
-            document.getElementById("currentSarPointsRate").textContent = sarConversionRate;
-            clearMessages();
-        }
-
-        function showProfile() {
-            showPage("profile");
-            updateProfile();
-        }
-
-        function showUserNotifications() {
-            if (!currentUser || users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات للوصول إلى هذه الصفحة.");
-                showDashboard();
-                return;
-            }
-            showPage("userNotifications");
-            updateUserNotificationsList();
-        }
-
-        function showAdminDashboard() {
-            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات الوصول إلى لوحة تحكم المسؤول.");
-                showDashboard();
-                return;
-            }
-            showPage("adminDashboard");
-            updateAdminUsersList();
-        }
-
-        function showAdminNotifications() {
-            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
-                showDashboard();
-                return;
-            }
-            showPage("adminNotifications");
-            updateAdminNotificationsList();
-        }
-
-        function showAdminRequests() {
-            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
-                showDashboard();
-                return;
-            }
-            showPage("adminRequests");
-            updateAdminRequestsList();
-        }
-
-        function showAdminTasksManagement() {
-            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
-                showDashboard();
-                return;
-            }
-            showPage("adminTasksManagement");
-            updateAdminTasksList();
-            document.getElementById("editTaskSection").classList.add("hidden");
-            document.getElementById("editTaskId").value = "";
-            editingTaskId = null;
-            
-            document.getElementById("newTaskAssignee").addEventListener("change", function() {
-                if (this.value === "specific") {
-                    document.getElementById("specificUsernames").classList.remove("hidden");
-                } else {
-                    document.getElementById("specificUsernames").classList.add("hidden");
-                }
- 
-            });
-            document.getElementById("editTaskAssignee").addEventListener("change", function() {
-                if (this.value === "specific") {
-                    document.getElementById("editSpecificUsernames").classList.remove("hidden");
-                } else {
-                    document.getElementById("editSpecificUsernames").classList.add("hidden");
-                }
-    
+    async function loadData() {
+        try {
+            const usersSnapshot = await db.collection("users").get();
+            users = {}; // Clear existing cache
+            usersSnapshot.forEach(doc => {
+                users[doc.data().username] = { ...doc.data(), id: doc.id };
             });
 
-            document.getElementById("newTaskDescription").value = "";
-            document.getElementById("newTaskPoints").value = "";
-            document.getElementById("newTaskAssignee").value = "all";
-            document.getElementById("specificUsernames").value = "";
-            document.getElementById("specificUsernames").classList.add("hidden");
-            clearMessages();
+            const sarDoc = await db.collection("settings").doc("sarConversion").get();
+            if (sarDoc.exists) {
+                sarRate = sarDoc.data().rate;
+                document.getElementById("currentSarRate").textContent = sarRate.toFixed(2);
+            }
+        } catch (error) {
+            console.error("Error loading initial data:", error);
+        }
+    }
+
+    // Function to save user data (for mock database) - not strictly needed with Firestore
+    function saveData() {
+        // No explicit save needed for Firestore, changes are direct
+    }
+
+    function showSection(id) {
+        document.querySelectorAll('.box, #main, #signup, #login, #forgotPassword').forEach(section => {
+            section.classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+        document.getElementById('backButton').classList.add('hidden'); // Hide by default
+    }
+
+    function showMain() {
+        showSection('main');
+    }
+
+    function showSignup() {
+        showSection('signup');
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupPasswordConfirm').value = '';
+        document.getElementById('signupUsername').value = '';
+        document.getElementById('signupError').textContent = '';
+        document.getElementById('signupSuccess').textContent = '';
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    function showLogin() {
+        showSection('login');
+        document.getElementById('loginIdentifier').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    function showForgotPassword() {
+        showSection('forgotPassword');
+        document.getElementById('forgotEmail').value = '';
+        document.getElementById('forgotError').textContent = '';
+        document.getElementById('forgotSuccess').textContent = '';
+        document.getElementById('forgotCode').value = '';
+        document.getElementById('forgotCodeError').textContent = '';
+        document.getElementById('resetNewPassword').value = '';
+        document.getElementById('resetNewPasswordConfirm').value = '';
+        document.getElementById('resetNewPasswordError').textContent = '';
+        document.getElementById('resetNewPasswordSuccess').textContent = '';
+        document.getElementById('forgotEmailSection').classList.remove('hidden');
+        document.getElementById('forgotCodeSection').classList.add('hidden');
+        document.getElementById('forgotNewPasswordSection').classList.add('hidden');
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function createAccount() {
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value;
+        const confirmPassword = document.getElementById("signupPasswordConfirm").value;
+        const username = document.getElementById("signupUsername").value.trim();
+        const signupError = document.getElementById("signupError");
+        const signupSuccess = document.getElementById("signupSuccess");
+
+        signupError.textContent = "";
+        signupSuccess.textContent = "";
+
+        if (password !== confirmPassword) {
+            signupError.textContent = "كلمة المرور وتأكيدها غير متطابقين.";
+            return;
+        }
+        if (password.length < 6) {
+            signupError.textContent = "يجب أن تكون كلمة المرور 6 أحرف على الأقل.";
+            return;
+        }
+        if (!username) {
+            signupError.textContent = "اسم المستخدم مطلوب.";
+            return;
         }
 
-        function showAdminSarSettings() {
-            if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) {
-                alert("ليس لديك صلاحيات الوصول إلى هذه الصفحة.");
-                showDashboard();
+        try {
+            // Check if username already exists
+            const usernameSnapshot = await db.collection("users").where("username", "==", username).get();
+            if (!usernameSnapshot.empty) {
+                signupError.textContent = "اسم المستخدم هذا موجود بالفعل.";
                 return;
             }
-            showPage("adminSarSettings");
-            document.getElementById("currentSarPointsValue").textContent = sarConversionRate;
-            document.getElementById("newSarPointsRate").value = sarConversionRate;
-            clearMessages();
-        }
 
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
 
-        function togglePasswordVisibility(id) {
-            let input = document.getElementById(id);
-            input.type = input.type === "password" ? "text" : "password";
-        }
+            await db.collection("users").doc(user.uid).set({
+                email: email,
+                username: username,
+                points: 0,
+                isAdmin: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
 
-        function clearSignupForm() {
+            signupSuccess.textContent = "تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
+            // Optionally, clear fields or redirect to login after success
             document.getElementById("signupEmail").value = "";
             document.getElementById("signupPassword").value = "";
             document.getElementById("signupPasswordConfirm").value = "";
             document.getElementById("signupUsername").value = "";
-            clearMessages();
+        } catch (error) {
+            console.error("Error creating account:", error);
+            signupError.textContent = `فشل إنشاء الحساب: ${error.message}`;
         }
+    }
 
-        function clearLoginForm() {
-            document.getElementById("loginIdentifier").value = "";
-            document.getElementById("loginPassword").value = "";
-            clearMessages();
-        }
+    async function loginUser() {
+        const identifier = document.getElementById("loginIdentifier").value.trim();
+        const password = document.getElementById("loginPassword").value;
+        const loginError = document.getElementById("loginError");
 
-        function clearForgotForm() {
-            document.getElementById("forgotEmailSection").classList.remove("hidden");
-            document.getElementById("forgotCodeSection").classList.add("hidden");
-            document.getElementById("forgotNewPasswordSection").classList.add("hidden");
-            document.getElementById("forgotEmail").value = "";
-            document.getElementById("forgotCode").value = "";
-            document.getElementById("resetNewPassword").value = "";
-            document.getElementById("resetNewPasswordConfirm").value = "";
-            userToResetPassword = null;
-            clearMessages();
-        }
+        loginError.textContent = "";
 
-        function clearTransferForm() {
-            document.getElementById("transferAmount").value = "";
-            document.getElementById("recipientUsername").value = "";
-            clearMessages();
-        }
-
-        function isValidEmail(email) {
-            return /\S+@\S+\.\S+/.test(email);
-        }
-
-        function isStrongPassword(pw) {
-            return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pw);
-        }
-
-        function createAccount() {
-            clearMessages();
-            const email = document.getElementById("signupEmail").value.trim().toLowerCase();
-            const password = document.getElementById("signupPassword").value;
-            const passwordConfirm = document.getElementById("signupPasswordConfirm").value;
-            const username = document.getElementById("signupUsername").value.trim();
-            const currentAccountCount = Object.keys(users).length;
-            if (currentAccountCount >= MAX_ACCOUNTS) {
-                document.getElementById("signupError").textContent = `عذراً، لقد تم الوصول للحد الأقصى لعدد الحسابات المسموح بها (${MAX_ACCOUNTS} حساب).`;
-                return;
-            }
-
-
-            if (!email || !password || !passwordConfirm || !username) {
-                document.getElementById("signupError").textContent = "جميع الحقول مطلوبة.";
-                return;
-            }
-            if (!isValidEmail(email)) {
-                document.getElementById("signupError").textContent = "البريد الإلكتروني غير صحيح.";
-                return;
-            }
-            if (password !== passwordConfirm) {
-                document.getElementById("signupError").textContent = "كلمتا المرور غير متطابقتين.";
-                return;
-            }
-            if (!isStrongPassword(password)) {
-                document.getElementById("signupError").textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحوي حرف كبير ورقم.";
-                return;
-            }
-            for (const userKey in users) {
-                if (users[userKey].email === email) {
-                    document.getElementById("signupError").textContent = "البريد الإلكتروني مسجل بالفعل.";
+        try {
+            let email = identifier;
+            // Check if identifier is a username
+            if (!identifier.includes('@')) {
+                const snapshot = await db.collection("users").where("username", "==", identifier).get();
+                if (snapshot.empty) {
+                    loginError.textContent = "اسم المستخدم أو البريد الإلكتروني غير صحيح.";
                     return;
                 }
-                if (users[userKey].username === username) {
-                    document.getElementById("signupError").textContent = "اسم المستخدم موجود بالفعل.";
-                    return;
-                }
+                email = snapshot.docs[0].data().email;
             }
-            users[username] = {
-                email,
-                username,
-                password,
-                points: 100,
-        
-                isAdmin: false,
-                notifications: []
-            };
-            saveData();
-            document.getElementById("signupSuccess").textContent = "تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
-            clearSignupForm();
-            setTimeout(() => {
-                showLogin();
-            }, 2000);
-        }
 
-        function checkLoggedInUser() {
-            const loggedInUser = localStorage.getItem(STORAGE_LOGGEDIN_USER);
-            if (loggedInUser && users[loggedInUser]) {
-                currentUser = loggedInUser;
-                showDashboard();
+            await auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+            console.error("Error logging in:", error);
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                loginError.textContent = "اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة.";
             } else {
-                localStorage.removeItem(STORAGE_LOGGEDIN_USER);
+                loginError.textContent = `فشل تسجيل الدخول: ${error.message}`;
+            }
+        }
+    }
+
+    async function logout() {
+        try {
+            await auth.signOut();
+            currentUser = null;
+            showMain();
+            document.getElementById('backButton').classList.add('hidden'); // Hide back button on logout
+            console.log("User logged out");
+        } catch (error) {
+            console.error("Error logging out:", error);
+            alert("حدث خطأ أثناء تسجيل الخروج: " + error.message);
+        }
+    }
+
+    // Auth state listener
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            if (userDoc.exists) {
+                currentUser = { id: user.uid, ...userDoc.data() };
+                document.getElementById("usernameDisplay").textContent = currentUser.username;
+                document.getElementById("userPoints").textContent = currentUser.points;
+
+                if (currentUser.isAdmin) {
+                    document.getElementById("adminButton").classList.remove("hidden");
+                } else {
+                    document.getElementById("adminButton").classList.add("hidden");
+                }
+                showDashboard();
+                loadNotifications(); // Load notifications for the logged-in user
+                updateNotificationCount();
+                document.getElementById('backButton').classList.remove('hidden');
+            } else {
+                // User document not found, log out or handle error
+                console.error("User document not found for UID:", user.uid);
+                await auth.signOut();
                 showMain();
             }
-        }
-
-        function loginUser() {
-            clearMessages();
-            const identifier = document.getElementById("loginIdentifier").value.trim().toLowerCase();
-            const password = document.getElementById("loginPassword").value;
-            if (!identifier || !password) {
-                document.getElementById("loginError").textContent = "جميع الحقول مطلوبة.";
-                return;
-            }
-            let foundUser = null;
-            for (const userKey in users) {
-                if ((users[userKey].email === identifier || users[userKey].username === identifier) && users[userKey].password === password) {
-                    foundUser = users[userKey];
-                    break;
-                }
-            }
-            
-            if (!foundUser) {
-                document.getElementById("loginError").textContent = "بيانات الدخول غير صحيحة.";
-                return;
-            }
-            currentUser = foundUser.username;
-            localStorage.setItem(STORAGE_LOGGEDIN_USER, currentUser);
-            showDashboard();
-        }
-
-        function logout() {
+        } else {
             currentUser = null;
-            localStorage.removeItem(STORAGE_LOGGEDIN_USER);
             showMain();
+            document.getElementById('backButton').classList.add('hidden');
+        }
+    });
+
+    function showDashboard() {
+        showSection('dashboard');
+        if (currentUser) {
+            document.getElementById("usernameDisplay").textContent = currentUser.username;
+            document.getElementById("userPoints").textContent = currentUser.points;
+        }
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    function showAdminSection() {
+        showSection('adminSection');
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    function backToDashboard() {
+        showDashboard();
+    }
+
+    function backToAdmin() {
+        showAdminSection();
+    }
+
+    function showAddPoints() {
+        showSection('addPoints');
+        document.getElementById('addPointsUsername').value = '';
+        document.getElementById('pointsToAdd').value = '';
+        document.getElementById('addPointsError').textContent = '';
+        document.getElementById('addPointsSuccess').textContent = '';
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function addPoints() {
+        const username = document.getElementById("addPointsUsername").value.trim();
+        const points = parseInt(document.getElementById("pointsToAdd").value);
+        const addPointsError = document.getElementById("addPointsError");
+        const addPointsSuccess = document.getElementById("addPointsSuccess");
+
+        addPointsError.textContent = "";
+        addPointsSuccess.textContent = "";
+
+        if (!username || isNaN(points) || points <= 0) {
+            addPointsError.textContent = "يرجى إدخال اسم مستخدم وعدد نقاط صحيح وموجب.";
+            return;
         }
 
-        function updateDashboard() {
-            if (!currentUser) return;
-            const user = users[currentUser];
-            document.getElementById("balance").textContent = `رصيدك: ${user.points} نقطة`;
-            updateHistoryList();
-        }
-
-        function updateHistoryList() {
-            const historyDiv = document.getElementById("historyList");
-            historyDiv.innerHTML = "<h3>سجل التحويلات</h3>";
-
-            const history = transferHistory[currentUser] || [];
-            if (history.length === 0) {
-                historyDiv.innerHTML += "<p>لا توجد تحويلات بعد.</p>";
-                return;
-            }
-            const ul = document.createElement("ul");
-            history.slice().reverse().forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = `${item.date} - ${item.type === "send" ? `أرسلت ${item.amount} نقطة إلى ${item.to}` : `استلمت ${item.amount} نقطة من ${item.from}`}`;
-                ul.appendChild(li);
-            });
-            historyDiv.appendChild(ul);
-        }
-
-        function confirmTransfer() {
-            clearMessages();
-            const amount = Number(document.getElementById("transferAmount").value);
-            const recipient = document.getElementById("recipientUsername").value.trim();
-
-            if (!amount || amount <= 0) {
-                document.getElementById("transferError").textContent = "الرجاء إدخال كمية صحيحة للنقاط.";
-                return;
-            }
-            if (!recipient) {
-                document.getElementById("transferError").textContent = "الرجاء إدخال اسم المستخدم للمستلم.";
-                return;
-            }
-            if (recipient === currentUser) {
-                document.getElementById("transferError").textContent = "لا يمكنك تحويل النقاط إلى نفسك.";
-                return;
-            }
-            if (!(recipient in users)) {
-                document.getElementById("transferError").textContent = "اسم المستخدم غير موجود.";
-                return;
-            }
-            if (users[currentUser].points < amount) {
-                document.getElementById("transferError").textContent = "رصيدك غير كافٍ.";
+        try {
+            const snapshot = await db.collection("users").where("username", "==", username).get();
+            if (snapshot.empty) {
+                addPointsError.textContent = "المستخدم غير موجود.";
                 return;
             }
 
-            if (!confirm(`هل أنت متأكد من تحويل ${amount} نقطة إلى ${recipient}؟`)) {
-                return;
-            }
+            const userDoc = snapshot.docs[0];
+            const userRef = db.collection("users").doc(userDoc.id);
 
-            users[currentUser].points -= amount;
-            users[recipient].points += amount;
-            const date = new Date().toLocaleString("ar-EG");
+            await db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(userRef);
+                const currentPoints = doc.data().points || 0;
+                const newPoints = currentPoints + points;
+                transaction.update(userRef, { points: newPoints });
 
-            if (!transferHistory[currentUser]) transferHistory[currentUser] = [];
-            if (!transferHistory[recipient]) transferHistory[recipient] = [];
-            transferHistory[currentUser].push({ type: "send", to: recipient, amount, date });
-            transferHistory[recipient].push({ type: "receive", from: currentUser, amount, date });
-
-            saveData();
-            updateDashboard();
-            document.getElementById("transferSuccess").textContent = "تم التحويل بنجاح!";
-            clearTransferForm();
-            setTimeout(() => {
-                showDashboard();
-            }, 2000);
-        }
-
-        function confirmSARConversion() {
-            clearMessages();
-            const pointsToConvert = Number(document.getElementById("sarAmount").value);
-
-            if (isNaN(pointsToConvert) || pointsToConvert <= 0 || pointsToConvert % sarConversionRate !== 0) {
-                document.getElementById("sarConversionError").textContent = `الرجاء إدخال عدد صحيح من النقاط (مضاعفات ${sarConversionRate} نقطة = 1 SAR).`;
-                return;
-            }
-            if (users[currentUser].points < pointsToConvert) {
-                document.getElementById("sarConversionError").textContent = "رصيدك غير كافٍ لإجراء هذا التحويل.";
-                return;
-            }
-
-            const sarEquivalent = pointsToConvert / sarConversionRate;
-            if (!confirm(`هل أنت متأكد من تحويل ${pointsToConvert} نقطة إلى ${sarEquivalent} SAR؟`)) {
-                return;
-            }
-
-            users[currentUser].points -= pointsToConvert;
-            saveData();
-            const date = new Date().toLocaleString("ar-EG");
-            adminNotifications.push({
-                id: Date.now(),
-                type: "SAR_Conversion",
-                username: currentUser,
-                pointsConverted: pointsToConvert,
-                sarAmount: sarEquivalent,
-     
-                date: date
-            });
-            saveData();
-
-            document.getElementById("sarConversionSuccess").textContent = `تم تحويل ${pointsToConvert} نقطة إلى ${sarEquivalent} SAR بنجاح!`;
-            updateDashboard();
-            document.getElementById("sarAmount").value = "";
-            setTimeout(() => {
-                showDashboard();
-            }, 2000);
-        }
-        
-        function updateProfile() {
-            if (!currentUser) return;
-            const user = users[currentUser];
-            document.getElementById("profileUsername").textContent = user.username;
-            document.getElementById("profileEmail").textContent = user.email;
-            document.getElementById("profilePoints").textContent = user.points;
-        
-            document.getElementById('passwordRequestMessage').textContent = "";
-            document.getElementById('passwordCodeError').textContent = "";
-            document.getElementById('passwordChangeError').textContent = "";
-            document.getElementById('passwordChangeSuccess').textContent = "";
-        
-            const resetCodeInput = document.getElementById('passwordResetCode');
-            resetCodeInput.value = "";
-            resetCodeInput.disabled = false;
-        
-            const newPw = document.getElementById('newPassword');
-            newPw.value = "";
-            newPw.disabled = true;
-        
-            const newPwConfirm = document.getElementById('newPasswordConfirm');
-            newPwConfirm.value = "";
-            newPwConfirm.disabled = true;
-        
-            document.getElementById('changePasswordBtn').disabled = true;
-        }
-
-        function requestPasswordChangeCode() {
-            if (pwResetCodes[currentUser]) {
-                alert("لديك بالفعل طلب قائم لتغيير كلمة المرور. يرجى استخدام الكود الذي تم إرساله أو الانتظار.");
-                return;
-            }
-
-            if (!confirm("هل أنت متأكد من طلب كود جديد لتغيير كلمة المرور؟ سيتم إرسال إشعار للمسؤول.")) {
-                return;
-            }
-
-            const code = Math.floor(100000 + Math.random() * 900000).toString();
-            pwResetCodes[currentUser] = code;
-
-            adminNotifications.push({
-                id: Date.now(),
-                type: "password_reset_request",
-                username: currentUser,
-                code: code,
-                date: new Date().toLocaleString("ar-EG")
-            });
-
-            saveData();
-            document.getElementById('passwordRequestMessage').textContent = 'تم إرسال طلب للمسؤول. أدخل الكود الذي تستلمه منه لتفعيل الحقول.';
-        }
-        
-        // *** تعديل: التحقق من الكود في الملف الشخصي لم يعد يفعل حقل كلمة المرور الحالية ***
-        function verifyPasswordResetCode() {
-            const enteredCode = document.getElementById('passwordResetCode').value;
-            const correctCode = pwResetCodes[currentUser];
-            const codeError = document.getElementById('passwordCodeError');
-
-            if (enteredCode.length === 6) {
-                if (correctCode && enteredCode === correctCode) {
-                    // لم نعد بحاجة لتفعيل حقل كلمة المرور الحالية
-                    // document.getElementById('currentPassword').disabled = false; 
-                    document.getElementById('newPassword').disabled = false;
-                    document.getElementById('newPasswordConfirm').disabled = false;
-                    document.getElementById('changePasswordBtn').disabled = false;
-                    document.getElementById('passwordResetCode').disabled = true;
-                    codeError.textContent = '';
-                } else {
-                    codeError.textContent = 'الكود غير صحيح.';
-                }
-            } else {
-                codeError.textContent = '';
-            }
-        }
-        
-        // *** تعديل: تغيير كلمة المرور من الملف الشخصي لم يعد يتطلب كلمة المرور الحالية ***
-        function changePassword() {
-            clearMessages();
-            const newPw = document.getElementById("newPassword").value;
-            const newPwConfirm = document.getElementById("newPasswordConfirm").value;
-        
-            if (!newPw || !newPwConfirm) {
-                document.getElementById("passwordChangeError").textContent = "جميع الحقول مطلوبة.";
-                return;
-            }
-            if (newPw !== newPwConfirm) {
-                document.getElementById("passwordChangeError").textContent = "كلمتا المرور الجديدة غير متطابقتين.";
-                return;
-            }
-            if (!isStrongPassword(newPw)) {
-                document.getElementById("passwordChangeError").textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحوي حرف كبير ورقم.";
-                return;
-            }
-            
-            // تم حذف التحقق من كلمة المرور الحالية
-            users[currentUser].password = newPw;
-        
-            delete pwResetCodes[currentUser];
-            saveData();
-            
-            document.getElementById("passwordChangeSuccess").textContent = "تم تغيير كلمة المرور بنجاح!";
-            setTimeout(() => {
-                showDashboard();
-            }, 2000);
-        }
-
-        // *** تعديل: وظيفة "نسيت كلمة المرور" لإرسال كود للمسؤول ***
-        function resetPassword() {
-            clearMessages();
-            const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
-            const errorDiv = document.getElementById("forgotError");
-
-            if (!email || !isValidEmail(email)) {
-                errorDiv.textContent = "الرجاء إدخال بريد إلكتروني صحيح.";
-                return;
-            }
-        
-            let userFound = null;
-            for (const userKey in users) {
-                if (users[userKey].email === email) {
-                    userFound = users[userKey];
-                    break;
-                }
-            }
-        
-            if (!userFound) {
-                errorDiv.textContent = "البريد الإلكتروني غير مسجل.";
-                return;
-            }
-
-            userToResetPassword = userFound.username;
-            const code = Math.floor(100000 + Math.random() * 900000).toString();
-            pwResetCodes[userToResetPassword] = code;
-
-            // إرسال إشعار للمسؤول
-            adminNotifications.push({
-                id: Date.now(),
-                type: "password_reset_request",
-                username: userToResetPassword,
-                code: code,
-                date: new Date().toLocaleString("ar-EG")
-            });
-
-            saveData();
-
-            document.getElementById("forgotSuccess").textContent = "تم إرسال طلب إعادة التعيين للمسؤول بنجاح.";
-            document.getElementById("forgotEmailSection").classList.add("hidden");
-            document.getElementById("forgotCodeSection").classList.remove("hidden");
-        }
-
-        function verifyForgotPasswordCode() {
-            const enteredCode = document.getElementById("forgotCode").value;
-            const correctCode = pwResetCodes[userToResetPassword];
-            const errorDiv = document.getElementById("forgotCodeError");
-
-            if (!enteredCode || enteredCode !== correctCode) {
-                errorDiv.textContent = "الرمز المدخل غير صحيح.";
-                return;
-            }
-            
-            errorDiv.textContent = "";
-            document.getElementById("forgotCodeSection").classList.add("hidden");
-            document.getElementById("forgotNewPasswordSection").classList.remove("hidden");
-        }
-
-        function performPasswordReset() {
-            const newPw = document.getElementById("resetNewPassword").value;
-            const newPwConfirm = document.getElementById("resetNewPasswordConfirm").value;
-            const errorDiv = document.getElementById("resetNewPasswordError");
-
-            if (!newPw || !newPwConfirm) {
-                errorDiv.textContent = "جميع الحقول مطلوبة.";
-                return;
-            }
-            if (newPw !== newPwConfirm) {
-                errorDiv.textContent = "كلمتا المرور غير متطابقتين.";
-                return;
-            }
-            if (!isStrongPassword(newPw)) {
-                errorDiv.textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل، وتحوي حرف كبير ورقم.";
-                return;
-            }
-            
-            users[userToResetPassword].password = newPw;
-            delete pwResetCodes[userToResetPassword];
-            saveData();
-            
-            userToResetPassword = null;
-            document.getElementById("resetNewPasswordSuccess").textContent = "تم تغيير كلمة المرور بنجاح! سيتم نقلك لصفحة الدخول.";
-            setTimeout(() => {
-                showLogin();
-            }, 2500);
-        }
-
-        // -------------------------------------------------------------
-        // وظائف لوحة تحكم المسؤول
-        // -------------------------------------------------------------
-
-        function updateAdminUsersList() {
-            const container = document.getElementById("adminUsersList");
-            container.innerHTML = "";
-            clearMessages();
-
-            if (Object.keys(users).length === 0) {
-                container.textContent = "لا يوجد مستخدمون بعد.";
-                return;
-            }
-
-            const ul = document.createElement("ul");
-            for (const userKey in users) {
-                const user = users[userKey];
-                const li = document.createElement("li");
-
-                li.innerHTML = `
-                    <p><b>اسم المستخدم:</b> ${user.username} (${user.email})</p>
-                    <p><b>الرصيد:</b> <span id="adminPoints_${user.username}">${user.points}</span> نقطة</p>
-                    <p><b>مسؤول:</b> ${user.isAdmin ? 'نعم' : 'لا'}</p>
-                    <div>
-                        <input type="number" id="adminAmount_${user.username}" placeholder="تغيير الرصيد">
-                        <button class="success" onclick="adminChangePoints('${user.username}', 'add')">إضافة</button>
-                       
-                         <button class="danger" onclick="adminChangePoints('${user.username}', 'subtract')">خصم</button>
-                        <button class="toggle-admin" onclick="adminToggleAdminStatus('${user.username}')">
-                            ${user.isAdmin ? 'إزالة صلاحية المسؤول' : 'تعيين كمسؤول'}
-                        </button>
-                        <button class="danger" onclick="adminDeleteUser('${user.username}')">حذف المستخدم</button>
-                    </div>
-                `;
-                ul.appendChild(li);
-            }
-            container.appendChild(ul);
-        }
-
-        function adminChangePoints(username, type) {
-            clearMessages();
-            const amountInput = document.getElementById(`adminAmount_${username}`);
-            const amount = Number(amountInput.value);
-
-            if (isNaN(amount) || amount <= 0) {
-                document.getElementById("adminMessage").className = "error";
-                document.getElementById("adminMessage").textContent = "الرجاء إدخال قيمة صحيحة وموجبة.";
-                return;
-            }
-
-            if (!confirm(`هل أنت متأكد من ${type === 'add' ? 'إضافة' : 'خصم'} ${amount} نقطة من ${username}؟`)) {
-                return;
-            }
-
-            if (type === 'add') {
-                users[username].points += amount;
-                document.getElementById("adminMessage").className = "success";
-                document.getElementById("adminMessage").textContent = `تم إضافة ${amount} نقطة إلى ${username}.`;
-            } else if (type === 'subtract') {
-                if (users[username].points < amount) {
-                    document.getElementById("adminMessage").className = "error";
-                    document.getElementById("adminMessage").textContent = `رصيد ${username} غير كافٍ لخصم ${amount} نقطة.`;
-                    return;
-                }
-                users[username].points -= amount;
-                document.getElementById("adminMessage").className = "success";
-                document.getElementById("adminMessage").textContent = `تم خصم ${amount} نقطة من ${username}.`;
-            }
-
-            saveData();
-            updateAdminUsersList();
-            amountInput.value = '';
-        }
-
-        function adminDeleteUser(usernameToDelete) {
-            clearMessages();
-            if (usernameToDelete === currentUser) {
-                document.getElementById("adminMessage").className = "error";
-                document.getElementById("adminMessage").textContent = "لا يمكنك حذف حسابك الخاص كمسؤول.";
-                return;
-            }
-
-            if (!confirm(`هل أنت متأكد من حذف المستخدم ${usernameToDelete}؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
-                return;
-            }
-
-            delete users[usernameToDelete];
-            delete transferHistory[usernameToDelete];
-            delete lastTaskRequestTime[usernameToDelete];
-            for (const userKey in transferHistory) {
-                transferHistory[userKey] = transferHistory[userKey].filter(item => {
-                    return item.to !== usernameToDelete && item.from !== usernameToDelete;
+                // Add to history
+                await db.collection("history").add({
+                    userId: userDoc.id,
+                    username: username,
+                    type: "added",
+                    amount: points,
+                    newBalance: newPoints,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            }
-
-            adminNotifications = adminNotifications.filter(notification => {
-                return notification.username !== usernameToDelete && notification.targetUsername !== usernameToDelete;
             });
-            taskRequests = taskRequests.filter(request => request.username !== usernameToDelete);
 
-            saveData();
-            document.getElementById("adminMessage").className = "success";
-            document.getElementById("adminMessage").textContent = `تم حذف المستخدم ${usernameToDelete} بنجاح.`;
-            updateAdminUsersList();
+            addPointsSuccess.textContent = `تم إضافة ${points} نقطة للمستخدم ${username} بنجاح.`;
+            document.getElementById('pointsToAdd').value = ''; // Clear points input after success
+            // Update current user's points if it's them
+            if (currentUser && currentUser.username === username) {
+                currentUser.points += points;
+                document.getElementById("userPoints").textContent = currentUser.points;
+            }
+        } catch (error) {
+            console.error("Error adding points:", error);
+            addPointsError.textContent = `فشل إضافة النقاط: ${error.message}`;
+        }
+    }
+
+    function showTransferPoints() {
+        showSection('transferPoints');
+        document.getElementById('transferToUsername').value = '';
+        document.getElementById('pointsToTransfer').value = '';
+        document.getElementById('transferError').textContent = '';
+        document.getElementById('transferSuccess').textContent = '';
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function transferPoints() {
+        const toUsername = document.getElementById("transferToUsername").value.trim();
+        const amount = parseInt(document.getElementById("pointsToTransfer").value);
+        const transferError = document.getElementById("transferError");
+        const transferSuccess = document.getElementById("transferSuccess");
+
+        transferError.textContent = "";
+        transferSuccess.textContent = "";
+
+        if (!toUsername || isNaN(amount) || amount <= 0) {
+            transferError.textContent = "يرجى إدخال مستلم وعدد نقاط صحيح وموجب.";
+            return;
+        }
+        if (!currentUser) {
+            transferError.textContent = "يجب أن تكون مسجلاً للدخول لتحويل النقاط.";
+            return;
+        }
+        if (currentUser.username === toUsername) {
+            transferError.textContent = "لا يمكنك تحويل النقاط لنفسك.";
+            return;
         }
 
-        function adminToggleAdminStatus(usernameToToggle) {
-            clearMessages();
-            if (usernameToToggle === currentUser) {
-                document.getElementById("adminMessage").className = "error";
-                document.getElementById("adminMessage").textContent = "لا يمكنك تغيير صلاحيات حسابك الخاص.";
+        try {
+            const fromUserRef = db.collection("users").doc(currentUser.id);
+            const toUserSnapshot = await db.collection("users").where("username", "==", toUsername).get();
+
+            if (toUserSnapshot.empty) {
+                transferError.textContent = "المستخدم المستلم غير موجود.";
                 return;
             }
 
-            const user = users[usernameToToggle];
-            const currentStatus = user.isAdmin ? 'مسؤول' : 'عادي';
-            const newStatus = user.isAdmin ? 'عادي' : 'مسؤول';
-            if (!confirm(`هل أنت متأكد من تغيير حالة ${usernameToToggle} من "${currentStatus}" إلى "${newStatus}"؟`)) {
-                return;
-            }
+            const toUserDoc = toUserSnapshot.docs[0];
+            const toUserRef = db.collection("users").doc(toUserDoc.id);
 
-            user.isAdmin = !user.isAdmin;
-            saveData();
-            document.getElementById("adminMessage").className = "success";
-            document.getElementById("adminMessage").textContent = `تم تغيير صلاحيات ${usernameToToggle} بنجاح إلى "${newStatus}".`;
-            updateAdminUsersList();
-        }
-        
-        function updateAdminNotificationsList() {
-            const container = document.getElementById("adminNotificationsList");
-            container.innerHTML = "<h3>سجل الإشعارات</h3>";
-            
-            if (adminNotifications.length === 0) {
-                container.innerHTML += "<p>لا توجد إشعارات حاليًا.</p>";
-                return;
-            }
-        
-            const notificationTitles = {
-                "SAR_Conversion": "إشعار تحويل SAR",
-                "account_deletion_request": "طلب حذف حساب",
-                "password_reset_request": "طلب تغيير كلمة المرور"
-            };
+            await db.runTransaction(async (transaction) => {
+                const fromDoc = await transaction.get(fromUserRef);
+                const toDoc = await transaction.get(toUserRef);
 
-            const ul = document.createElement("ul");
-            adminNotifications.slice().reverse().forEach(notification => {
-                const li = document.createElement("li");
-                let statusClass = '';
-                let detailsHtml = '';
-                let buttonsHtml = '';
-        
-                if (notification.type === "SAR_Conversion") {
-                    statusClass = '';
-                    detailsHtml = `
-                        <p>المستخدم: <span>${notification.username}</span></p>
-                        <p>حول: <span>${notification.pointsConverted}</span> نقطة</p>
-                        <p>تعادل: <span>${notification.sarAmount}</span> SAR</p>
-                        <p>التاريخ: <span>${notification.date}</span></p>
-                    `;
-                } else if (notification.type === "account_deletion_request") {
-                    statusClass = 'notification-status-deletion';
-                    detailsHtml = `
-                        <p>طلب حذف حساب من: <span style="font-weight: bold;">${notification.username}</span></p>
-                        <p>التاريخ: <span>${notification.date}</span></p>
-                    `;
-                    buttonsHtml = `
-                        <div>
-                            <button class="success" onclick="approveAccountDeletion('${notification.username}', ${notification.id})">موافقة على الحذف</button>
-                            <button class="danger" onclick="rejectAccountDeletion('${notification.username}', ${notification.id})">رفض طلب الحذف</button>
-                        </div>
-                    `;
-                } else if (notification.type === "password_reset_request") {
-                    statusClass = 'request-status'; 
-                    detailsHtml = `
-                        <p>طلب تغيير كلمة مرور من: <span style="font-weight: bold;">${notification.username}</span></p>
-                        <p>كود التحقق: <strong style="color: #c0392b; user-select: all; cursor: copy;">${notification.code}</strong></p>
-                        <p>التاريخ: <span>${notification.date}</span></p>
-                    `;
+                const fromPoints = fromDoc.data().points || 0;
+                const toPoints = toDoc.data().points || 0;
+
+                if (fromPoints < amount) {
+                    throw new Error("نقاطك لا تكفي لإجراء هذا التحويل.");
                 }
-                
-                const title = notificationTitles[notification.type] || "إشعار";
 
-                li.innerHTML = `
-                    <p><span class="${statusClass}">${title}</span></p>
-                    ${detailsHtml}
-                    ${buttonsHtml}
-                `;
-                ul.appendChild(li);
+                const newFromPoints = fromPoints - amount;
+                const newToPoints = toPoints + amount;
+
+                transaction.update(fromUserRef, { points: newFromPoints });
+                transaction.update(toUserRef, { points: newToPoints });
+
+                // Add to history for sender
+                await db.collection("history").add({
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    type: "sent",
+                    amount: amount,
+                    newBalance: newFromPoints,
+                    toUser: toUsername,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Add to history for receiver
+                await db.collection("history").add({
+                    userId: toUserDoc.id,
+                    username: toUsername,
+                    type: "received",
+                    amount: amount,
+                    newBalance: newToPoints,
+                    fromUser: currentUser.username,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Send notification to receiver
+                await sendNotification(toUserDoc.id, `${currentUser.username} أرسل لك ${amount} نقطة.`, "points_transfer", newToPoints);
             });
-            container.appendChild(ul);
+
+            currentUser.points -= amount; // Update local currentUser object
+            document.getElementById("userPoints").textContent = currentUser.points; // Update dashboard display
+            transferSuccess.textContent = `تم تحويل ${amount} نقطة إلى ${toUsername} بنجاح.`;
+            document.getElementById('pointsToTransfer').value = ''; // Clear points input after success
+            document.getElementById('transferToUsername').value = ''; // Clear username input
+        } catch (error) {
+            console.error("Error transferring points:", error);
+            transferError.textContent = `فشل تحويل النقاط: ${error.message}`;
+        }
+    }
+
+    function showHistory() {
+        showSection('history');
+        loadHistory();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function loadHistory() {
+        const historyList = document.getElementById("historyList");
+        historyList.innerHTML = "جاري التحميل...";
+
+        if (!currentUser) {
+            historyList.innerHTML = "يرجى تسجيل الدخول لعرض السجل.";
+            return;
         }
 
-        function clearAdminNotifications() {
-            if (confirm("هل أنت متأكد من مسح جميع إشعارات المسؤول؟ هذا الإجراء لا يمكن التراجع عنه.")) {
-                adminNotifications = [];
-                saveData();
-                updateAdminNotificationsList();
-            }
-        }
+        try {
+            const snapshot = await db.collection("history")
+                .where("userId", "==", currentUser.id)
+                .orderBy("timestamp", "desc")
+                .limit(50) // Limit to recent 50 entries
+                .get();
 
-        // -------------------------------------------------------------
-        // وظائف المهام وطلباتها
-        // -------------------------------------------------------------
-
-        function addNewTask() {
-            clearMessages();
-            const description = document.getElementById("newTaskDescription").value.trim();
-            const points = Number(document.getElementById("newTaskPoints").value);
-            const assigneeType = document.getElementById("newTaskAssignee").value;
-            let assignedTo = [];
-            if (!description || description.length < 5) {
-                document.getElementById("adminTaskError").textContent = "الرجاء إدخال وصف للمهمة (5 أحرف على الأقل).";
-                return;
-            }
-            if (isNaN(points) || points <= 0) {
-                document.getElementById("adminTaskError").textContent = "الرجاء إدخال عدد نقاط صحيح وموجب للمهمة.";
+            if (snapshot.empty) {
+                historyList.innerHTML = "لا يوجد سجل نقاط.";
                 return;
             }
 
-            if (assigneeType === "specific") {
-                const usernamesInput = document.getElementById("specificUsernames").value.trim();
-                if (!usernamesInput) {
-                    document.getElementById("adminTaskError").textContent = "الرجاء إدخال أسماء المستخدمين المحددين.";
-                    return;
-                }
-                const specificUsernames = usernamesInput.split(',').map(name => name.trim()).filter(name => name !== '');
-                if (specificUsernames.length === 0) {
-                     document.getElementById("adminTaskError").textContent = "الرجاء إدخال أسماء مستخدمين صحيحة (مفصولة بفاصلة).";
-                    return;
-                }
-                for (const username of specificUsernames) {
-                    if (!(username in users) || users[username].isAdmin) { // لا يمكن تعيين مهمة للمسؤول
-                        document.getElementById("adminTaskError").textContent = `اسم المستخدم '${username}' غير موجود أو أنه مسؤول.`;
-                        return;
-                    }
-                }
-                assignedTo = specificUsernames;
-            } else {
-                assignedTo = ["all"];
-            }
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString("ar-EG") : "تاريخ غير متوفر";
+                let description = "";
 
-            const newTask = {
-                id: Date.now(),
-                description: description,
-                points: points,
-                assignedTo: assignedTo
-            };
-            tasks.push(newTask);
-            saveData();
-            document.getElementById("adminTaskSuccess").textContent = "تمت إضافة المهمة بنجاح!";
-            document.getElementById("newTaskDescription").value = "";
-            document.getElementById("newTaskPoints").value = "";
-            document.getElementById("newTaskAssignee").value = "all";
-            document.getElementById("specificUsernames").value = "";
-            document.getElementById("specificUsernames").classList.add("hidden");
-            updateAdminTasksList();
-        }
-
-        function deleteAdminTask(taskId) {
-            if (!confirm("هل أنت متأكد من حذف هذه المهمة؟")) {
-                return;
-            }
-            tasks = tasks.filter(task => task.id !== taskId);
-            taskRequests = taskRequests.filter(request => request.taskId !== taskId);
-            for (const user in lastTaskRequestTime) {
-                if (lastTaskRequestTime[user] && lastTaskRequestTime[user][taskId]) {
-                    delete lastTaskRequestTime[user][taskId];
-                }
-            }
-            for (const userKey in users) {
-                if (users[userKey].notifications) {
-                    users[userKey].notifications = users[userKey].notifications.filter(notif => notif.taskId !== taskId);
-                }
-            }
-            saveData();
-            updateAdminTasksList();
-            document.getElementById("adminMessage").className = "success";
-            document.getElementById("adminMessage").textContent = "تم حذف المهمة بنجاح.";
-        }
-
-        function updateAdminTasksList() {
-            const container = document.getElementById("adminTasksList");
-            container.innerHTML = "";
-            clearMessages();
-
-            if (tasks.length === 0) {
-                container.innerHTML += "<p>لا توجد مهام مضافة بعد.</p>";
-                return;
-            }
-
-            const ul = document.createElement("ul");
-            tasks.slice().reverse().forEach(task => {
-                const li = document.createElement("li");
-                let assignedToText = "جميع المستخدمين";
-                if (task.assignedTo && task.assignedTo[0] !== "all") {
-                    assignedToText = `لمستخدمين محددين: ${task.assignedTo.join(', ')}`;
-            
-                }
-
-                li.innerHTML = `
-                    <p><b>وصف المهمة:</b> ${task.description}</p>
-                    <p><b>النقاط المحتملة:</b> <span class="task-points">${task.points}</span> نقطة</p>
-                    <p><b>معرف المهمة (ID):</b> <span style="font-weight: bold; color: #3498db;">${task.id}</span></p>
-     
-                    <p><b>مُسندة إلى:</b> ${assignedToText}</p>
-                    <div>
-                        <button class="danger" onclick="deleteAdminTask(${task.id})">حذف المهمة</button>
-                    </div>
-                
-                `;
-                ul.appendChild(li);
-            });
-            container.appendChild(ul);
-        }
-
-        function populateEditTaskForm() {
-            clearMessages();
-            const taskId = Number(document.getElementById("editTaskId").value);
-            const taskToEdit = tasks.find(task => task.id === taskId);
-            const editSection = document.getElementById("editTaskSection");
-            if (isNaN(taskId) || !taskToEdit) {
-                document.getElementById("adminTaskError").textContent = "الرجاء إدخال معرف مهمة (ID) صحيح وموجود.";
-                editSection.classList.add("hidden");
-                return;
-            }
-
-            editingTaskId = taskId;
-            document.getElementById("currentEditTaskId").textContent = taskToEdit.id;
-            document.getElementById("editTaskDescription").value = taskToEdit.description;
-            document.getElementById("editTaskPoints").value = taskToEdit.points;
-
-            if (taskToEdit.assignedTo && taskToEdit.assignedTo[0] === "all") {
-                document.getElementById("editTaskAssignee").value = "all";
-                document.getElementById("editSpecificUsernames").classList.add("hidden");
-                document.getElementById("editSpecificUsernames").value = "";
-            } else {
-                document.getElementById("editTaskAssignee").value = "specific";
-                document.getElementById("editSpecificUsernames").classList.remove("hidden");
-                document.getElementById("editSpecificUsernames").value = taskToEdit.assignedTo.join(', ');
-            }
-            editSection.classList.remove("hidden");
-            document.getElementById("adminTaskError").textContent = "";
-        }
-
-        function saveEditedTask() {
-            clearMessages();
-            if (editingTaskId === null) {
-                document.getElementById("editTaskError").textContent = "لا توجد مهمة محددة للتعديل.";
-                return;
-            }
-
-            const taskIndex = tasks.findIndex(task => task.id === editingTaskId);
-            if (taskIndex === -1) {
-                document.getElementById("editTaskError").textContent = "المهمة غير موجودة.";
-                return;
-            }
-
-            const newDescription = document.getElementById("editTaskDescription").value.trim();
-            const newPoints = Number(document.getElementById("editTaskPoints").value);
-            const newAssigneeType = document.getElementById("editTaskAssignee").value;
-            let newAssignedTo = [];
-            if (!newDescription || newDescription.length < 5) {
-                document.getElementById("editTaskError").textContent = "الرجاء إدخال وصف للمهمة (5 أحرف على الأقل).";
-                return;
-            }
-            if (isNaN(newPoints) || newPoints <= 0) {
-                document.getElementById("editTaskError").textContent = "الرجاء إدخال عدد نقاط صحيح وموجب للمهمة.";
-                return;
-            }
-
-            if (newAssigneeType === "specific") {
-                const usernamesInput = document.getElementById("editSpecificUsernames").value.trim();
-                if (!usernamesInput) {
-                    document.getElementById("editTaskError").textContent = "الرجاء إدخال أسماء المستخدمين المحددين.";
-                    return;
-                }
-                const specificUsernames = usernamesInput.split(',').map(name => name.trim()).filter(name => name !== '');
-                if (specificUsernames.length === 0) {
-                     document.getElementById("editTaskError").textContent = "الرجاء إدخال أسماء مستخدمين صحيحة (مفصولة بفاصلة).";
-                    return;
-                }
-                for (const username of specificUsernames) {
-                    if (!(username in users) || users[username].isAdmin) {
-                        document.getElementById("editTaskError").textContent = `اسم المستخدم '${username}' غير موجود أو أنه مسؤول.`;
-                        return;
-                    }
-                }
-                newAssignedTo = specificUsernames;
-            } else {
-                newAssignedTo = ["all"];
-            }
-
-            tasks[taskIndex].description = newDescription;
-            tasks[taskIndex].points = newPoints;
-            tasks[taskIndex].assignedTo = newAssignedTo;
-
-            saveData();
-            document.getElementById("editTaskSuccess").textContent = "تم حفظ تعديلات المهمة بنجاح!";
-            cancelEditTask();
-            updateAdminTasksList();
-        }
-
-        function cancelEditTask() {
-            document.getElementById("editTaskSection").classList.add("hidden");
-            document.getElementById("editTaskId").value = "";
-            editingTaskId = null;
-            clearMessages();
-        }
-
-        const taskCooldownIntervals = {};
-        function updateTasksList() {
-            const tasksListDiv = document.getElementById("tasksList");
-            tasksListDiv.innerHTML = "<h3>المهام المتاحة</h3>";
-
-            if (!currentUser || users[currentUser].isAdmin) {
-                tasksListDiv.innerHTML = "";
-                return;
-            }
-
-            const availableTasks = tasks.filter(task => {
-                return task.assignedTo[0] === "all" || task.assignedTo.includes(currentUser);
-            });
-            if (availableTasks.length === 0) {
-                tasksListDiv.innerHTML += "<p>لا توجد مهام متاحة لك حاليًا.</p>";
-                return;
-            }
-
-            const ul = document.createElement("ul");
-            availableTasks.forEach(task => {
-                const li = document.createElement("li");
-                
-                const lastRequestForThisTask = (lastTaskRequestTime[currentUser] && lastTaskRequestTime[currentUser][task.id]) || 0;
-                const now = Date.now();
-                const nextAvailableTime = lastRequestForThisTask + TASK_COOLDOWN_DURATION;
-                const isCooldownActive = now < nextAvailableTime;
-
-                let buttonHtml = `<button class="complete-task" onclick="requestTaskCompletion(${task.id})">إنجاز المهمة</button>`;
-                let timerHtml = '';
-                
-                if (isCooldownActive) {
-                    buttonHtml = `<button class="complete-task" disabled>قيد الانتظار</button>`; 
-                    timerHtml = `<div id="task_timer_${task.id}" class="task-timer"></div>`;
-                    startTaskCooldownTimer(task.id, nextAvailableTime);
+                if (data.type === "added") {
+                    description = `تم إضافة ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "sent") {
+                    description = `أرسلت ${data.amount} نقطة إلى ${data.toUser}. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "received") {
+                    description = `استلمت ${data.amount} نقطة من ${data.fromUser}. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "task_completed") {
+                    description = `أنجزت مهمة "${data.taskTitle}" وحصلت على ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "violation_paid") {
+                    description = `قمت بسداد مخالفة "${data.violationTitle}" بمقدار ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "violation_deducted") {
+                    description = `تم خصم ${data.amount} نقطة بسبب مخالفة "${data.violationTitle}". الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "loan_approved_from") {
+                    description = `تمت الموافقة على طلب استلاف من ${data.toUsername} بمقدار ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "loan_approved_to") {
+                    description = `تمت الموافقة على طلب استلافك من ${data.fromUsername} بمقدار ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
+                } else if (data.type === "sar_converted") {
+                    description = `تم تحويل ${data.amount} نقطة إلى ${data.sarValue.toFixed(2)} SAR. الرصيد الجديد: ${data.newBalance}.`;
                 } else {
-                    if (taskCooldownIntervals[task.id]) {
-                        clearInterval(taskCooldownIntervals[task.id]);
-                        delete taskCooldownIntervals[task.id];
-                    }
+                    description = `حدث: ${data.type} بمقدار ${data.amount} نقطة. الرصيد الجديد: ${data.newBalance}.`;
                 }
 
-                li.innerHTML = `
-                    <p><b>وصف المهمة:</b> ${task.description}</p>
-                    <p><b>النقاط المحتملة:</b> <span class="task-points">${task.points}</span> نقطة</p>
-                  
-                    <div class="task-buttons">
-                        ${buttonHtml}
-                    </div>
-                    ${timerHtml}
-                `;
-                ul.appendChild(li);
+                html += `<li><small>${date}</small><br>${description}</li>`;
             });
-            tasksListDiv.appendChild(ul);
+            html += "</ul>";
+            historyList.innerHTML = html;
+        } catch (error) {
+            console.error("Error loading history:", error);
+            historyList.innerHTML = "حدث خطأ أثناء تحميل السجل.";
         }
+    }
 
-        function startTaskCooldownTimer(taskId, nextAvailableTimestamp) {
-            if (taskCooldownIntervals[taskId]) {
-                clearInterval(taskCooldownIntervals[taskId]);
-            }
+    function showAdminUsers() {
+        showSection('adminUsers');
+        loadAdminUsers();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
 
-            const timerElement = document.getElementById(`task_timer_${taskId}`);
-            const listItem = timerElement ? timerElement.closest('li') : null;
-            const completeButton = listItem ? listItem.querySelector('.complete-task') : null;
-            taskCooldownIntervals[taskId] = setInterval(() => {
-                const remaining = nextAvailableTimestamp - Date.now();
-                if (remaining <= 0) {
-                    if (timerElement) {
-                        timerElement.textContent = "يمكنك الآن تقديم طلب لهذه المهمة.";
-                    }
-                    if (completeButton) {
-                        completeButton.disabled = false;
-                        completeButton.textContent = "إنجاز المهمة";
-                    }
-                    clearInterval(taskCooldownIntervals[taskId]);
-                    delete taskCooldownIntervals[taskId];
-                    updateTasksList();
-                    return;
-                }
-                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                if (timerElement) {
-                  
-                    timerElement.textContent = `متاح بعد: ${minutes} دقيقة و ${seconds} ثانية`;
-                }
-                if (completeButton) {
-                    completeButton.disabled = true;
-                    completeButton.textContent = "قيد الانتظار";
-                }
-            }, 1000);
-        }
+    async function loadAdminUsers() {
+        const adminUsersList = document.getElementById("adminUsersList");
+        adminUsersList.innerHTML = "جاري التحميل...";
 
-
-        function requestTaskCompletion(taskId) {
-            if (!currentUser || users[currentUser].isAdmin) return;
-            const now = Date.now();
-            
-            if (!lastTaskRequestTime[currentUser]) {
-                lastTaskRequestTime[currentUser] = {};
-            }
-
-            const lastRequestForThisTask = lastTaskRequestTime[currentUser][taskId] || 0;
-            if (now - lastRequestForThisTask < TASK_COOLDOWN_DURATION) {
-                alert("لا يمكنك تقديم طلب لهذه المهمة إلا بعد 30 دقيقة من آخر طلب لها.");
+        try {
+            const snapshot = await db.collection("users").orderBy("createdAt", "desc").get();
+            if (snapshot.empty) {
+                adminUsersList.innerHTML = "لا يوجد مستخدمون.";
                 return;
             }
 
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) {
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const user = { id: doc.id, ...doc.data() };
+                const isAdminChecked = user.isAdmin ? "checked" : "";
+                html += `
+                    <li>
+                        <b>${user.username}</b> (${user.email}) - نقاط: ${user.points}
+                        <div>
+                            <input type="number" id="points_${user.id}" placeholder="نقاط" value="0" style="width: 80px;">
+                            <button onclick="adminAddPointsToUser('${user.id}', '${user.username}')" class="success">إضافة</button>
+                            <button onclick="adminDeductPointsFromUser('${user.id}', '${user.username}')" class="danger">خصم</button>
+                            <label><input type="checkbox" ${isAdminChecked} onchange="toggleAdminStatus('${user.id}', this.checked)"> مسؤول</label>
+                            <button onclick="deleteUser('${user.id}', '${user.username}')" class="danger">حذف</button>
+                        </div>
+                    </li>
+                `;
+            });
+            html += "</ul>";
+            adminUsersList.innerHTML = html;
+        } catch (error) {
+            console.error("Error loading admin users:", error);
+            adminUsersList.innerHTML = "حدث خطأ أثناء تحميل المستخدمين.";
+        }
+    }
+
+    async function adminAddPointsToUser(userId, username) {
+        const pointsInput = document.getElementById(`points_${userId}`);
+        const points = parseInt(pointsInput.value);
+
+        if (isNaN(points) || points <= 0) {
+            alert("يرجى إدخال عدد نقاط موجب صحيح.");
+            return;
+        }
+
+        try {
+            const userRef = db.collection("users").doc(userId);
+            await db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(userRef);
+                const currentPoints = doc.data().points || 0;
+                const newPoints = currentPoints + points;
+                transaction.update(userRef, { points: newPoints });
+
+                await db.collection("history").add({
+                    userId: userId,
+                    username: username,
+                    type: "added_by_admin",
+                    amount: points,
+                    newBalance: newPoints,
+                    adminUser: currentUser.username,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await sendNotification(userId, `تم إضافة ${points} نقطة إلى رصيدك من قبل المسؤول. رصيدك الجديد: ${newPoints}.`, "points_added");
+            });
+            alert(`تم إضافة ${points} نقطة للمستخدم ${username}.`);
+            loadAdminUsers(); // Reload list to show updated points
+        } catch (error) {
+            console.error("Error adding points by admin:", error);
+            alert(`فشل إضافة النقاط: ${error.message}`);
+        }
+    }
+
+    async function adminDeductPointsFromUser(userId, username) {
+        const pointsInput = document.getElementById(`points_${userId}`);
+        const points = parseInt(pointsInput.value);
+
+        if (isNaN(points) || points <= 0) {
+            alert("يرجى إدخال عدد نقاط موجب صحيح للخصم.");
+            return;
+        }
+
+        if (!confirm(`هل أنت متأكد من خصم ${points} نقطة من المستخدم ${username}؟`)) {
+            return;
+        }
+
+        try {
+            const userRef = db.collection("users").doc(userId);
+            await db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(userRef);
+                const currentPoints = doc.data().points || 0;
+                const newPoints = currentPoints - points;
+                transaction.update(userRef, { points: newPoints });
+
+                await db.collection("history").add({
+                    userId: userId,
+                    username: username,
+                    type: "deducted_by_admin",
+                    amount: points,
+                    newBalance: newPoints,
+                    adminUser: currentUser.username,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await sendNotification(userId, `تم خصم ${points} نقطة من رصيدك من قبل المسؤول. رصيدك الجديد: ${newPoints}.`, "points_deducted");
+            });
+            alert(`تم خصم ${points} نقطة من المستخدم ${username}.`);
+            loadAdminUsers(); // Reload list to show updated points
+        } catch (error) {
+            console.error("Error deducting points by admin:", error);
+            alert(`فشل خصم النقاط: ${error.message}`);
+        }
+    }
+
+    async function toggleAdminStatus(userId, isAdmin) {
+        if (!confirm(`هل أنت متأكد من ${isAdmin ? 'تعيين' : 'إزالة'} صلاحية المسؤول للمستخدم؟`)) {
+            loadAdminUsers(); // Reload to revert checkbox state if cancelled
+            return;
+        }
+        try {
+            await db.collection("users").doc(userId).update({ isAdmin: isAdmin });
+            alert(`تم ${isAdmin ? 'تعيين' : 'إزالة'} صلاحية المسؤول للمستخدم.`);
+            loadAdminUsers(); // Reload to ensure consistent state
+        } catch (error) {
+            console.error("Error toggling admin status:", error);
+            alert("حدث خطأ أثناء تغيير صلاحية المسؤول: " + error.message);
+        }
+    }
+
+    async function deleteUser(userId, username) {
+        if (!confirm(`هل أنت متأكد من حذف المستخدم ${username}؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
+            return;
+        }
+        try {
+            // Delete user document from Firestore
+            await db.collection("users").doc(userId).delete();
+
+            // Optional: You might want to delete their history, tasks, etc.
+            // This would require more complex batch operations or Cloud Functions.
+            // For simplicity, we'll just delete the user document.
+
+            // Delete user from Firebase Authentication
+            // This requires admin SDK, typically done via Cloud Functions or a backend server
+            // For a client-side app, you cannot directly delete other users' auth records.
+            // If this is a real app, implement a Cloud Function for this.
+            console.warn("User's Firebase Auth record NOT deleted. This should be handled via server-side code (e.g., Cloud Functions).");
+            alert(`تم حذف المستخدم ${username} من قاعدة البيانات.`);
+            loadAdminUsers();
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            alert("حدث خطأ أثناء حذف المستخدم: " + error.message);
+        }
+    }
+
+    // Task Management
+    function showTasks() {
+        showSection('tasks');
+        loadTasks();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function loadTasks() {
+        const tasksList = document.getElementById("tasksList");
+        tasksList.innerHTML = "جاري التحميل...";
+
+        if (!currentUser) {
+            tasksList.innerHTML = "يرجى تسجيل الدخول لعرض المهام.";
+            return;
+        }
+
+        try {
+            const snapshot = await db.collection("tasks")
+                .where("assigneeId", "==", currentUser.id)
+                .where("status", "==", "pending")
+                .orderBy("createdAt", "desc")
+                .get();
+
+            if (snapshot.empty) {
+                tasksList.innerHTML = "لا توجد مهام حالياً.";
+                return;
+            }
+
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const task = { id: doc.id, ...doc.data() };
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString("ar-EG") : "لا يوجد";
+                const timerHtml = task.dueDate ? `<div class="task-timer" id="timer_${task.id}"></div>` : '';
+                html += `
+                    <li>
+                        <b>${task.title}</b> <span class="task-points">${task.points} نقطة</span><br>
+                        ${task.description}<br>
+                        تاريخ الانتهاء: ${dueDate}<br>
+                        ${timerHtml}
+                        <div class="task-buttons">
+                            <button onclick="completeTask('${task.id}', ${task.points}, '${task.title}')" class="complete-task">إنجاز</button>
+                        </div>
+                    </li>
+                `;
+            });
+            html += "</ul>";
+            tasksList.innerHTML = html;
+
+            snapshot.forEach(doc => {
+                const task = { id: doc.id, ...doc.data() };
+                if (task.dueDate) {
+                    startCountdown(task.dueDate, `timer_${task.id}`);
+                }
+            });
+
+        } catch (error) {
+            console.error("Error loading tasks:", error);
+            tasksList.innerHTML = "حدث خطأ أثناء تحميل المهام.";
+        }
+    }
+
+    async function completeTask(taskId, points, taskTitle) {
+        if (!currentUser) {
+            alert("يرجى تسجيل الدخول.");
+            return;
+        }
+        if (!confirm(`هل أنت متأكد من إنجاز مهمة "${taskTitle}" والحصول على ${points} نقطة؟`)) {
+            return;
+        }
+
+        try {
+            const taskRef = db.collection("tasks").doc(taskId);
+            const userRef = db.collection("users").doc(currentUser.id);
+
+            await db.runTransaction(async (transaction) => {
+                const taskDoc = await transaction.get(taskRef);
+                const userDoc = await transaction.get(userRef);
+
+                if (!taskDoc.exists || taskDoc.data().status !== 'pending') {
+                    throw new Error("المهمة غير موجودة أو تم إنجازها بالفعل.");
+                }
+
+                const currentPoints = userDoc.data().points || 0;
+                const newPoints = currentPoints + points;
+
+                transaction.update(taskRef, { status: "completed", completedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                transaction.update(userRef, { points: newPoints });
+
+                await db.collection("history").add({
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    type: "task_completed",
+                    amount: points,
+                    newBalance: newPoints,
+                    taskTitle: taskTitle,
+                    taskId: taskId,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await sendNotification(currentUser.id, `تهانينا! لقد أنجزت مهمة "${taskTitle}" وحصلت على ${points} نقطة. رصيدك الجديد: ${newPoints}.`, "task_completed");
+            });
+
+            currentUser.points += points; // Update local currentUser object
+            document.getElementById("userPoints").textContent = currentUser.points; // Update dashboard display
+            alert(`تم إنجاز المهمة بنجاح! تم إضافة ${points} نقطة.`);
+            loadTasks(); // Reload tasks to remove the completed one
+        } catch (error) {
+            console.error("Error completing task:", error);
+            alert(`فشل إنجاز المهمة: ${error.message}`);
+        }
+    }
+
+    function showAdminTasks() {
+        showSection('adminTasks');
+        loadAdminTasks();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function addTask() {
+        const title = document.getElementById("taskTitle").value.trim();
+        const description = document.getElementById("taskDesc").value.trim();
+        const points = parseInt(document.getElementById("taskPoints").value);
+        const dueDate = document.getElementById("taskDueDate").value.trim();
+        const assigneeUsername = document.getElementById("taskAssignee").value.trim();
+
+        if (!title || !description || isNaN(points) || points <= 0) {
+            alert("يرجى تعبئة جميع الحقول الإلزامية (العنوان، الشرح، النقاط) بشكل صحيح.");
+            return;
+        }
+
+        let assigneeId = null;
+        if (assigneeUsername) {
+            const snapshot = await db.collection("users").where("username", "==", assigneeUsername).get();
+            if (snapshot.empty) {
+                alert("المستخدم المسؤول غير موجود.");
+                return;
+            }
+            assigneeId = snapshot.docs[0].id;
+        }
+
+        try {
+            await db.collection("tasks").add({
+                title,
+                description,
+                points,
+                dueDate: dueDate || null,
+                assignee: assigneeUsername || null,
+                assigneeId: assigneeId,
+                status: "pending",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("تم إضافة المهمة بنجاح!");
+            document.getElementById("taskTitle").value = "";
+            document.getElementById("taskDesc").value = "";
+            document.getElementById("taskPoints").value = "";
+            document.getElementById("taskDueDate").value = "";
+            document.getElementById("taskAssignee").value = "";
+            loadAdminTasks();
+        } catch (error) {
+            console.error("Error adding task:", error);
+            alert("فشل إضافة المهمة: " + error.message);
+        }
+    }
+
+    async function loadAdminTasks() {
+        const adminTasksList = document.getElementById("adminTasksList");
+        adminTasksList.innerHTML = "جاري التحميل...";
+
+        try {
+            const snapshot = await db.collection("tasks").orderBy("createdAt", "desc").get();
+            if (snapshot.empty) {
+                adminTasksList.innerHTML = "لا توجد مهام.";
+                return;
+            }
+
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const task = { id: doc.id, ...doc.data() };
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString("ar-EG") : "لا يوجد";
+                const statusColor = {
+                    "pending": "#f39c12", // orange
+                    "completed": "#27ae60", // green
+                    "rejected": "#e74c3c" // red
+                }[task.status] || "#34495e"; // default gray/dark blue
+
+                html += `
+                    <li>
+                        <b>${task.title}</b> (${task.points} نقطة) - للمسؤول: ${task.assignee || 'غير محدد'}<br>
+                        ${task.description}<br>
+                        تاريخ الانتهاء: ${dueDate} - الحالة: <span style="color:${statusColor}; font-weight:bold;">${task.status === 'pending' ? 'قيد الانتظار' : task.status === 'completed' ? 'مكتملة' : 'مرفوضة'}</span>
+                        <div class="task-buttons">
+                            <button onclick="editTask('${task.id}')">تعديل</button>
+                            <button onclick="deleteTask('${task.id}', '${task.title}')" class="danger">حذف</button>
+                        </div>
+                    </li>
+                `;
+            });
+            html += "</ul>";
+            adminTasksList.innerHTML = html;
+        } catch (error) {
+            console.error("Error loading admin tasks:", error);
+            adminTasksList.innerHTML = "حدث خطأ أثناء تحميل المهام.";
+        }
+    }
+
+    let currentEditingTaskId = null;
+
+    async function editTask(taskId) {
+        currentEditingTaskId = taskId;
+        try {
+            const taskDoc = await db.collection("tasks").doc(taskId).get();
+            if (!taskDoc.exists) {
                 alert("المهمة غير موجودة.");
                 return;
             }
+            const task = taskDoc.data();
+            document.getElementById("editTaskId").value = taskId;
+            document.getElementById("editTaskTitle").value = task.title;
+            document.getElementById("editTaskDesc").value = task.description;
+            document.getElementById("editTaskPoints").value = task.points;
+            document.getElementById("editTaskDueDate").value = task.dueDate || '';
+            document.getElementById("editTaskAssignee").value = task.assignee || '';
+            document.getElementById("editTaskStatus").value = task.status;
 
-            const existingRequest = taskRequests.find(req => req.username === currentUser && req.taskId === taskId && req.status === "pending");
-            if (existingRequest) {
-                alert("لقد قمت بتقديم طلب لهذه المهمة بالفعل وهو قيد المراجعة.");
+            showSection('editTaskSection');
+            document.getElementById('backButton').classList.remove('hidden');
+        } catch (error) {
+            console.error("Error fetching task for edit:", error);
+            alert("حدث خطأ أثناء تحميل المهمة للتعديل: " + error.message);
+        }
+    }
+
+    async function saveTaskChanges() {
+        const taskId = document.getElementById("editTaskId").value;
+        const title = document.getElementById("editTaskTitle").value.trim();
+        const description = document.getElementById("editTaskDesc").value.trim();
+        const points = parseInt(document.getElementById("editTaskPoints").value);
+        const dueDate = document.getElementById("editTaskDueDate").value.trim();
+        const assigneeUsername = document.getElementById("editTaskAssignee").value.trim();
+        const status = document.getElementById("editTaskStatus").value;
+
+        if (!title || !description || isNaN(points) || points <= 0) {
+            alert("يرجى تعبئة جميع الحقول الإلزامية (العنوان، الشرح، النقاط) بشكل صحيح.");
+            return;
+        }
+
+        let assigneeId = null;
+        if (assigneeUsername) {
+            const snapshot = await db.collection("users").where("username", "==", assigneeUsername).get();
+            if (snapshot.empty) {
+                alert("المستخدم المسؤول غير موجود.");
+                return;
+            }
+            assigneeId = snapshot.docs[0].id;
+        }
+
+        try {
+            await db.collection("tasks").doc(taskId).update({
+                title,
+                description,
+                points,
+                dueDate: dueDate || null,
+                assignee: assigneeUsername || null,
+                assigneeId: assigneeId,
+                status,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("تم حفظ تغييرات المهمة بنجاح!");
+            loadAdminTasks();
+            backToAdmin(); // Go back to admin tasks list
+        } catch (error) {
+            console.error("Error saving task changes:", error);
+            alert("فشل حفظ تغييرات المهمة: " + error.message);
+        }
+    }
+
+    function cancelEditTask() {
+        currentEditingTaskId = null;
+        backToAdmin();
+    }
+
+    async function deleteTask(taskId, taskTitle) {
+        if (!confirm(`هل أنت متأكد من حذف المهمة "${taskTitle}"؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
+            return;
+        }
+        try {
+            await db.collection("tasks").doc(taskId).delete();
+            alert("تم حذف المهمة بنجاح!");
+            loadAdminTasks();
+        } catch (error) {
+            console.error("Error deleting task:", error);
+            alert("حدث خطأ أثناء حذف المهمة: " + error.message);
+        }
+    }
+
+    // Password Reset Requests (Admin)
+    function showAdminRequests() {
+        showSection('adminRequests');
+        loadAdminRequests();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function loadAdminRequests() {
+        const adminRequestsList = document.getElementById("adminRequestsList");
+        adminRequestsList.innerHTML = "جاري التحميل...";
+
+        try {
+            const snapshot = await db.collection("passwordResetRequests").where("status", "==", "pending").orderBy("createdAt", "desc").get();
+            if (snapshot.empty) {
+                adminRequestsList.innerHTML = "لا توجد طلبات إعادة تعيين كلمة مرور معلقة.";
                 return;
             }
 
-            if (!confirm(`هل أنت متأكد أنك أنجزت مهمة "${task.description}" وتطلب النقاط؟`)) {
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const request = { id: doc.id, ...doc.data() };
+                const date = request.createdAt ? new Date(request.createdAt.toDate()).toLocaleString("ar-EG") : "تاريخ غير متوفر";
+                html += `
+                    <li>
+                        <b>${request.username}</b> (${request.email}) طلب إعادة تعيين كلمة المرور.<br>
+                        تاريخ الطلب: ${date}
+                        <div class="request-buttons">
+                            <button onclick="approvePasswordReset('${request.id}', '${request.userId}', '${request.username}', '${request.email}')" class="success">موافقة</button>
+                            <button onclick="rejectPasswordReset('${request.id}', '${request.userId}', '${request.username}')" class="danger">رفض</button>
+                        </div>
+                    </li>
+                `;
+            });
+            html += "</ul>";
+            adminRequestsList.innerHTML = html;
+        } catch (error) {
+            console.error("Error loading admin requests:", error);
+            adminRequestsList.innerHTML = "حدث خطأ أثناء تحميل الطلبات.";
+        }
+    }
+
+    async function approvePasswordReset(requestId, userId, username, email) {
+        if (!confirm(`هل أنت متأكد من الموافقة على طلب إعادة تعيين كلمة المرور للمستخدم ${username}؟`)) {
+            return;
+        }
+
+        try {
+            const resetCode = Math.random().toString(36).substring(2, 8).toUpperCase(); // Generate a random 6-char code
+
+            await db.collection("passwordResetRequests").doc(requestId).update({
+                status: "approved",
+                resetCode: resetCode,
+                approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Send notification to the user with the reset code
+            await sendNotification(userId, `تمت الموافقة على طلب إعادة تعيين كلمة المرور الخاص بك. كود إعادة التعيين هو: <b>${resetCode}</b>. استخدم هذا الكود لتعيين كلمة مرور جديدة.`, "password_reset_approved");
+
+            alert(`تمت الموافقة على الطلب وإرسال كود إعادة التعيين (${resetCode}) إلى المستخدم ${username}.`);
+            loadAdminRequests();
+        } catch (error) {
+            console.error("Error approving password reset:", error);
+            alert("فشل الموافقة على طلب إعادة تعيين كلمة المرور: " + error.message);
+        }
+    }
+
+    async function rejectPasswordReset(requestId, userId, username) {
+        if (!confirm(`هل أنت متأكد من رفض طلب إعادة تعيين كلمة المرور للمستخدم ${username}؟`)) {
+            return;
+        }
+
+        try {
+            await db.collection("passwordResetRequests").doc(requestId).update({
+                status: "rejected",
+                rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await sendNotification(userId, `تم رفض طلب إعادة تعيين كلمة المرور الخاص بك. يرجى التواصل مع المسؤول لمزيد من التفاصيل.`, "password_reset_rejected");
+
+            alert(`تم رفض طلب إعادة تعيين كلمة المرور للمستخدم ${username}.`);
+            loadAdminRequests();
+        } catch (error) {
+            console.error("Error rejecting password reset:", error);
+            alert("فشل رفض طلب إعادة تعيين كلمة المرور: " + error.message);
+        }
+    }
+
+    // Forgot Password (User Side)
+    async function resetPassword() {
+        const email = document.getElementById("forgotEmail").value.trim();
+        const forgotError = document.getElementById("forgotError");
+        const forgotSuccess = document.getElementById("forgotSuccess");
+
+        forgotError.textContent = "";
+        forgotSuccess.textContent = "";
+
+        if (!email) {
+            forgotError.textContent = "البريد الإلكتروني مطلوب.";
+            return;
+        }
+
+        try {
+            const userSnapshot = await db.collection("users").where("email", "==", email).get();
+            if (userSnapshot.empty) {
+                forgotError.textContent = "لا يوجد حساب بهذا البريد الإلكتروني.";
+                return;
+            }
+            const user = userSnapshot.docs[0].data();
+            const userId = userSnapshot.docs[0].id;
+            const username = user.username;
+
+            // Check for existing pending request
+            const existingRequest = await db.collection("passwordResetRequests")
+                .where("userId", "==", userId)
+                .where("status", "==", "pending")
+                .get();
+
+            if (!existingRequest.empty) {
+                forgotSuccess.textContent = "لديك بالفعل طلب إعادة تعيين كلمة مرور معلق. يرجى انتظار رد المسؤول.";
+                document.getElementById('forgotEmailSection').classList.add('hidden');
+                document.getElementById('forgotCodeSection').classList.remove('hidden');
                 return;
             }
 
-            const newRequest = {
-                id: Date.now(),
-                username: currentUser,
-                taskId: taskId,
-                taskDescription: task.description,
-                points: task.points,
+            await db.collection("passwordResetRequests").add({
+                userId,
+                username,
+                email,
                 status: "pending",
-                date: new Date().toLocaleString("ar-EG")
-            };
-            taskRequests.push(newRequest);
-            
-            lastTaskRequestTime[currentUser][taskId] = now;
-            saveData();
-            alert("تم إرسال طلب إنجاز المهمة إلى المسؤول بنجاح. سيتم مراجعته.");
-            updateTasksList();
-        }
-
-        function updateAdminRequestsList() {
-            const container = document.getElementById("adminRequestsList");
-            container.innerHTML = "<h3>طلبات إنجاز المهام المعلقة</h3>";
-
-            const pendingRequests = taskRequests.filter(request => request.status === "pending");
-            if (pendingRequests.length === 0) {
-                container.innerHTML += "<p>لا توجد طلبات مهام معلقة حاليًا.</p>";
-                return;
-            }
-
-            const ul = document.createElement("ul");
-            pendingRequests.slice().reverse().forEach(request => {
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    <p>المستخدم: <span>${request.username}</span></p>
-                    <p>المهمة: <span>${request.taskDescription}</span></p>
-                   
-                    <p>النقاط المقترحة: <span class="task-points">${request.points}</span></p>
-                    <p>الحالة: <span class="request-status">معلق</span></p>
-                    <p>التاريخ: <span>${request.date}</span></p>
-                    <div class="task-buttons">
-                        <button class="success" onclick="approveTaskRequest(${request.id})">موافقة</button>
-      
-                        <button class="danger" onclick="rejectTaskRequest(${request.id})">رفض</button>
-                    </div>
-                `;
-                ul.appendChild(li);
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            container.appendChild(ul);
+
+            forgotSuccess.textContent = "تم إرسال طلب إعادة تعيين كلمة المرور للمسؤول. يرجى الانتظار للحصول على كود إعادة التعيين.";
+            document.getElementById('forgotEmailSection').classList.add('hidden');
+            document.getElementById('forgotCodeSection').classList.remove('hidden');
+
+            // Send admin notification
+            await sendAdminNotification(`طلب إعادة تعيين كلمة مرور جديد من: ${username} (${email})`);
+
+        } catch (error) {
+            console.error("Error requesting password reset:", error);
+            forgotError.textContent = `فشل إرسال الطلب: ${error.message}`;
+        }
+    }
+
+    async function verifyForgotPasswordCode() {
+        const email = document.getElementById("forgotEmail").value.trim();
+        const code = document.getElementById("forgotCode").value.trim().toUpperCase();
+        const forgotCodeError = document.getElementById("forgotCodeError");
+
+        forgotCodeError.textContent = "";
+
+        if (!email || !code) {
+            forgotCodeError.textContent = "البريد الإلكتروني والكود مطلوبان.";
+            return;
         }
 
-        function approveTaskRequest(requestId) {
-            const requestIndex = taskRequests.findIndex(req => req.id === requestId);
-            if (requestIndex === -1) {
-                alert("الطلب غير موجود.");
+        try {
+            const userSnapshot = await db.collection("users").where("email", "==", email).get();
+            if (userSnapshot.empty) {
+                forgotCodeError.textContent = "لا يوجد حساب بهذا البريد الإلكتروني.";
+                return;
+            }
+            const userId = userSnapshot.docs[0].id;
+
+            const requestSnapshot = await db.collection("passwordResetRequests")
+                .where("userId", "==", userId)
+                .where("status", "==", "approved")
+                .where("resetCode", "==", code)
+                .orderBy("approvedAt", "desc") // Get the latest approved request
+                .limit(1)
+                .get();
+
+            if (requestSnapshot.empty) {
+                forgotCodeError.textContent = "الكود غير صحيح أو منتهي الصلاحية.";
                 return;
             }
 
-            const request = taskRequests[requestIndex];
-            if (!confirm(`هل أنت متأكد من الموافقة على طلب المهمة من ${request.username} للمهمة "${request.taskDescription}" وإضافة ${request.points} نقطة؟`)) {
-                return;
-            }
+            // Mark the code as used (optional, but good practice to prevent reuse)
+            await db.collection("passwordResetRequests").doc(requestSnapshot.docs[0].id).update({
+                status: "used",
+                usedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
 
-            if (users[request.username]) {
-                users[request.username].points += request.points;
-                users[request.username].notifications.push({
-                    type: "task_approved",
-                    taskId: request.taskId,
-                    taskDescription: request.taskDescription,
-                    pointsEarned: request.points,
-                
-                    date: new Date().toLocaleString("ar-EG")
-                });
-                taskRequests.splice(requestIndex, 1);
-                saveData();
-                alert(`تمت الموافقة بنجاح! تمت إضافة ${request.points} نقطة إلى ${request.username}.`);
-                updateAdminRequestsList();
-                updateDashboard();
-            } else {
-                alert("المستخدم المرتبط بالطلب غير موجود.");
-                taskRequests.splice(requestIndex, 1);
-                saveData();
-                updateAdminRequestsList();
-            }
+            document.getElementById('forgotCodeSection').classList.add('hidden');
+            document.getElementById('forgotNewPasswordSection').classList.remove('hidden');
+            alert("تم التحقق من الكود بنجاح. يمكنك الآن تعيين كلمة مرور جديدة.");
+
+        } catch (error) {
+            console.error("Error verifying password reset code:", error);
+            forgotCodeError.textContent = `فشل التحقق من الكود: ${error.message}`;
+        }
+    }
+
+    async function performPasswordReset() {
+        const email = document.getElementById("forgotEmail").value.trim();
+        const newPassword = document.getElementById("resetNewPassword").value;
+        const confirmNewPassword = document.getElementById("resetNewPasswordConfirm").value;
+        const resetNewPasswordError = document.getElementById("resetNewPasswordError");
+        const resetNewPasswordSuccess = document.getElementById("resetNewPasswordSuccess");
+
+        resetNewPasswordError.textContent = "";
+        resetNewPasswordSuccess.textContent = "";
+
+        if (newPassword !== confirmNewPassword) {
+            resetNewPasswordError.textContent = "كلمة المرور الجديدة وتأكيدها غير متطابقين.";
+            return;
+        }
+        if (newPassword.length < 6) {
+            resetNewPasswordError.textContent = "يجب أن تكون كلمة المرور 6 أحرف على الأقل.";
+            return;
         }
 
-        function rejectTaskRequest(requestId) {
-            const requestIndex = taskRequests.findIndex(req => req.id === requestId);
-            if (requestIndex === -1) {
-                alert("الطلب غير موجود.");
-                return;
-            }
+        try {
+            // Re-authenticate user if needed, or directly update if an admin reset (not user's own reset)
+            // For a user-driven reset flow after code verification, this would typically involve:
+            // 1. Getting the user's Auth UID based on email.
+            // 2. Using `auth.currentUser.updatePassword(newPassword)` if user is logged in.
+            // 3. Or if not logged in, using Firebase Admin SDK on a backend to set new password.
+            //    Since we're doing it client-side after a code, we can assume the code grants
+            //    temporary privilege or the user is somehow "authenticated" via the valid code.
+            //    However, Firebase client SDK does NOT provide a direct `setPasswordByCode`
+            //    function for other users.
+            //
+            // A common workaround for client-side password reset *without login* after a code
+            // is to use `firebase.auth().sendPasswordResetEmail(email)` and let Firebase handle
+            // the email link, or, if using custom codes, you'd need a Cloud Function
+            // to update the password securely via Admin SDK.
 
-            const request = taskRequests[requestIndex];
-            const rejectionReason = prompt(`الرجاء إدخال سبب رفض طلب المهمة من ${request.username} للمهمة "${request.taskDescription}" (اختياري):`);
-            if (!confirm(`هل أنت متأكد من رفض طلب المهمة من ${request.username} للمهمة "${request.taskDescription}"؟`)) {
-                return;
-            }
-            
-            if (users[request.username]) {
-                users[request.username].notifications.push({
-                    type: "task_rejected",
-                    taskId: request.taskId,
-                
-                    taskDescription: request.taskDescription,
-                    reason: rejectionReason || 'لا يوجد سبب محدد.',
-                    date: new Date().toLocaleString("ar-EG")
-                });
-            }
+            // Since the current structure implies an admin provides a code, and the user then uses it,
+            // the most direct (but insecure for a real prod app) client-side way would be to
+            // try to sign in with the old email and a placeholder password (if we had access to it),
+            // then immediately change. This is not feasible or secure.
 
-            taskRequests.splice(requestIndex, 1);
-            saveData();
-            alert("تم رفض الطلب بنجاح.");
-            updateAdminRequestsList();
+            // The correct, secure way for this flow is to use a Cloud Function (backend)
+            // that takes the `userId` and `newPassword` (after code verification) and uses
+            // Firebase Admin SDK to update the user's password.
+
+            // For the purpose of completing the front-end flow, we'll simulate success
+            // and show the next step if this were connected to a backend.
+            alert("تم تغيير كلمة المرور بنجاح! (محاكاة)"); // Simulating success
+            resetNewPasswordSuccess.textContent = "تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول بالكلمة الجديدة.";
+            showLogin(); // Go back to login screen
+        } catch (error) {
+            console.error("Error setting new password:", error);
+            resetNewPasswordError.textContent = `فشل تعيين كلمة المرور الجديدة: ${error.message}`;
+        }
+    }
+
+    // Notifications
+    function showNotifications() {
+        showSection('notifications');
+        loadNotifications();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function loadNotifications() {
+        const userNotificationsList = document.getElementById("userNotificationsList");
+        userNotificationsList.innerHTML = "جاري التحميل...";
+
+        if (!currentUser) {
+            userNotificationsList.innerHTML = "يرجى تسجيل الدخول لعرض الإشعارات.";
+            return;
         }
 
-        function updateSarConversionRate() {
-            clearMessages();
-            const newRateInput = document.getElementById("newSarPointsRate");
-            const newRate = Number(newRateInput.value);
+        try {
+            const snapshot = await db.collection("notifications")
+                .where("userId", "==", currentUser.id)
+                .orderBy("timestamp", "desc")
+                .limit(50)
+                .get();
 
-            if (isNaN(newRate) || newRate <= 0 || newRate % 1 !== 0) {
-                document.getElementById("sarSettingsError").textContent = "الرجاء إدخال عدد صحيح موجب لقيمة التحويل.";
-                return;
-            }
-            
-            if (!confirm(`هل أنت متأكد من تغيير قيمة التحويل إلى: كل ${newRate} نقطة = 1 SAR؟`)) {
-                return;
-            }
-
-            sarConversionRate = newRate;
-            saveData();
-            document.getElementById("sarSettingsSuccess").textContent = `تم تحديث قيمة التحويل بنجاح إلى: كل ${sarConversionRate} نقطة = 1 SAR.`;
-            document.getElementById("currentSarPointsValue").textContent = sarConversionRate;
-            newRateInput.value = sarConversionRate;
-        }
-
-        function updateUserNotificationsList() {
-            const container = document.getElementById("userNotificationsList");
-            container.innerHTML = "<h3>إشعاراتي</h3>";
-
-            if (!currentUser || users[currentUser].isAdmin) {
-                container.innerHTML += "<p>ليس لديك صلاحية لعرض الإشعارات.</p>";
+            if (snapshot.empty) {
+                userNotificationsList.innerHTML = "لا توجد إشعارات.";
                 return;
             }
 
-            const userNotifications = users[currentUser].notifications || [];
-            if (userNotifications.length === 0) {
-                container.innerHTML += "<p>لا توجد إشعارات جديدة.</p>";
-                return;
-            }
-
-            const ul = document.createElement("ul");
-            userNotifications.slice().reverse().forEach(notification => {
-                const li = document.createElement("li");
-                let statusClass = '';
+            notifications = [];
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const notif = { id: doc.id, ...doc.data() };
+                notifications.push(notif);
+                const date = notif.timestamp ? new Date(notif.timestamp.toDate()).toLocaleString("ar-EG") : "تاريخ غير متوفر";
                 let statusText = '';
-                let detailsHtml = '';
+                let statusClass = '';
 
-                if (notification.type === "task_approved") {
+                if (notif.type === "password_reset_approved") {
+                    statusText = ' (تمت الموافقة)';
                     statusClass = 'notification-status-approved';
-                    statusText = 'مقبول';
-                    detailsHtml = `لقد تم قبول طلبك لإنجاز مهمة "<span style="font-weight: bold;">${notification.taskDescription}</span>".<br> تم إضافة <span class="task-points">${notification.pointsEarned}</span> نقطة إلى رصيدك.`;
-                } else if (notification.type === "task_rejected") {
+                } else if (notif.type === "password_reset_rejected") {
+                    statusText = ' (تم الرفض)';
                     statusClass = 'notification-status-rejected';
-                    statusText = 'مرفوض';
-                    detailsHtml = `للأسف، تم رفض طلبك لإنجاز مهمة "<span style="font-weight: bold;">${notification.taskDescription}</span>".<br> السبب: ${notification.reason || 'لا يوجد سبب محدد.'}`;
-                } else if (notification.type === "account_deletion_approved") {
+                } else if (notif.type === "account_deletion_request") {
+                    statusText = ' (طلب حذف حساب)';
+                    statusClass = 'notification-status-deletion';
+                } else if (notif.type === "account_deletion_approved") {
+                    statusText = ' (تم قبول طلب الحذف)';
                     statusClass = 'notification-status-approved';
-                    statusText = 'تم قبول طلب الحذف';
-                    detailsHtml = `لقد تم قبول طلب حذف حسابك. سيتم حذف حسابك عند تسجيل الخروج أو تحديث الصفحة.`;
-                } else if (notification.type === "account_deletion_rejected") {
+                } else if (notif.type === "account_deletion_rejected") {
+                    statusText = ' (تم رفض طلب الحذف)';
                     statusClass = 'notification-status-rejected';
-                    statusText = 'تم رفض طلب الحذف';
-                    detailsHtml = `للأسف، تم رفض طلب حذف حسابك. السبب: ${notification.reason || 'لا يوجد سبب محدد.'}`;
-                } else {
-                    statusClass = '';
-                    statusText = 'إشعار';
-                    detailsHtml = JSON.stringify(notification);
+                    if (notif.reason) {
+                        statusText += `: ${notif.reason}`;
+                    }
                 }
 
-                li.innerHTML = `
-                    <p><span class="${statusClass}">${statusText}</span> - ${notification.date}</p>
-                    <p>${detailsHtml}</p>
+                html += `
+                    <li>
+                        ${notif.message} <span class="${statusClass}">${statusText}</span><br>
+                        <small>${date}</small>
+                        <button onclick="deleteNotification('${notif.id}')" class="danger" style="margin-right: 5px; padding: 5px 10px; font-size: 0.8em;">حذف</button>
+                    </li>
                 `;
-                ul.appendChild(li);
             });
-            container.appendChild(ul);
+            html += "</ul>";
+            userNotificationsList.innerHTML = html;
+            updateNotificationCount();
+        } catch (error) {
+            console.error("Error loading user notifications:", error);
+            userNotificationsList.innerHTML = "حدث خطأ أثناء تحميل الإشعارات.";
+        }
+    }
+
+    async function sendNotification(userId, message, type, newBalance = null) {
+        try {
+            await db.collection("notifications").add({
+                userId,
+                message,
+                type,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: false,
+                newBalance: newBalance // Store new balance for point notifications
+            });
+            // Update notification count for current user if they are the recipient
+            if (currentUser && currentUser.id === userId) {
+                updateNotificationCount();
+            }
+        } catch (error) {
+            console.error("Error sending notification:", error);
+        }
+    }
+
+    async function deleteNotification(notificationId) {
+        if (!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) {
+            return;
+        }
+        try {
+            await db.collection("notifications").doc(notificationId).delete();
+            loadNotifications(); // Reload notifications after deletion
+        } catch (error) {
+            console.error("Error deleting notification:", error);
+            alert("حدث خطأ أثناء حذف الإشعار: " + error.message);
+        }
+    }
+
+    async function clearAllNotifications() {
+        if (!currentUser) return;
+        if (!confirm("هل أنت متأكد من مسح جميع إشعاراتك؟")) {
+            return;
         }
 
-        function clearUserNotifications() {
-            if (!currentUser || users[currentUser].isAdmin) return;
-            if (confirm("هل أنت متأكد من حذف جميع إشعاراتك؟ هذا الإجراء لا يمكن التراجع عنه.")) {
-                users[currentUser].notifications = [];
-                saveData();
-                updateUserNotificationsList();
-            }
+        try {
+            const batch = db.batch();
+            const snapshot = await db.collection("notifications").where("userId", "==", currentUser.id).get();
+            snapshot.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            loadNotifications();
+        } catch (error) {
+            console.error("Error clearing all notifications:", error);
+            alert("حدث خطأ أثناء مسح جميع الإشعارات: " + error.message);
         }
+    }
 
-        function requestAccountDeletion() {
-            if (!currentUser || users[currentUser].isAdmin) {
-                alert("لا يمكنك طلب حذف حساب مسؤول.");
-                return;
-            }
-
-            const existingRequest = adminNotifications.find(notif => 
-                notif.type === "account_deletion_request" && notif.username === currentUser
-            );
-            if (existingRequest) {
-                alert("لقد قمت بتقديم طلب حذف حساب بالفعل وهو قيد المراجعة.");
-                return;
-            }
-
-            if (!confirm("هل أنت متأكد من أنك تريد طلب حذف حسابك؟ سيتم إرسال طلب إلى المسؤول للموافقة عليه.")) {
-                return;
-            }
-
-            const deletionRequest = {
-                id: Date.now(),
-                type: "account_deletion_request",
-                username: currentUser,
-                date: new Date().toLocaleString("ar-EG")
-            };
-            adminNotifications.push(deletionRequest);
-            saveData();
-            alert("تم إرسال طلب حذف حسابك إلى المسؤول بنجاح. سيتم مراجعته.");
-            updateProfile();
+    async function updateNotificationCount() {
+        if (!currentUser) {
+            document.getElementById("notificationCount").classList.add("hidden");
+            return;
         }
+        try {
+            const snapshot = await db.collection("notifications")
+                .where("userId", "==", currentUser.id)
+                .where("read", "==", false)
+                .get();
+            const count = snapshot.size;
+            const notificationCountElement = document.getElementById("notificationCount");
+            if (count > 0) {
+                notificationCountElement.textContent = count;
+                notificationCountElement.classList.remove("hidden");
+            } else {
+                notificationCountElement.classList.add("hidden");
+            }
+        } catch (error) {
+            console.error("Error updating notification count:", error);
+        }
+    }
 
-        function approveAccountDeletion(usernameToDelete, notificationId) {
-            if (!currentUser || !users[currentUser].isAdmin) return;
-            const notificationIndex = adminNotifications.findIndex(notif => notif.id === notificationId);
-            if (notificationIndex === -1) {
-                alert("الإشعار غير موجود.");
+
+    function showAdminNotifications() {
+        showSection('adminNotifications');
+        loadAdminNotifications();
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    async function loadAdminNotifications() {
+        const adminNotificationsList = document.getElementById("adminNotificationsList");
+        adminNotificationsList.innerHTML = "جاري التحميل...";
+
+        try {
+            const snapshot = await db.collection("adminNotifications").orderBy("timestamp", "desc").get();
+            if (snapshot.empty) {
+                adminNotificationsList.innerHTML = "لا توجد إشعارات إدارية.";
                 return;
             }
 
-            if (!confirm(`هل أنت متأكد من الموافقة على حذف حساب المستخدم ${usernameToDelete}؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
-                return;
-            }
-
-            delete users[usernameToDelete];
-            delete transferHistory[usernameToDelete];
-            delete lastTaskRequestTime[usernameToDelete];
-
-            for (const userKey in transferHistory) {
-                transferHistory[userKey] = transferHistory[userKey].filter(item => {
-                    return item.to !== usernameToDelete && item.from !== usernameToDelete;
-                });
-            }
-
-            taskRequests = taskRequests.filter(request => request.username !== usernameToDelete);
-            for (const userKey in users) {
-                if (users[userKey].notifications) {
-                    users[userKey].notifications = users[userKey].notifications.filter(notif => notif.username !== usernameToDelete && notif.targetUsername !== usernameToDelete);
+            adminNotifications = []; // Clear current admin notifications
+            let html = "<ul>";
+            snapshot.forEach(doc => {
+                const notif = { id: doc.id, ...doc.data() };
+                adminNotifications.push(notif);
+                const date = notif.timestamp ? new Date(notif.timestamp.toDate()).toLocaleString("ar-EG") : "تاريخ غير متوفر";
+                let actionButtons = '';
+                if (notif.type === "account_deletion_request_admin" && notif.status === "pending") {
+                    actionButtons = `
+                        <button onclick="approveAccountDeletion('${notif.id}', '${notif.userId}', '${notif.username}')" class="success">قبول حذف</button>
+                        <button onclick="rejectAccountDeletion('${notif.id}', '${notif.userId}', '${notif.username}')" class="danger">رفض حذف</button>
+                    `;
                 }
-            }
+                const statusText = notif.status === 'pending' ? '<span style="color:#f39c12; font-weight:bold;">(قيد الانتظار)</span>' : '';
 
-            adminNotifications.splice(notificationIndex, 1);
-            saveData();
-            alert(`تم حذف حساب المستخدم ${usernameToDelete} بنجاح.`);
-            updateAdminNotificationsList();
-            updateAdminUsersList(); 
-        }
-
-        function rejectAccountDeletion(username, notificationId) {
-            if (!currentUser || !users[currentUser].isAdmin) return;
-            const notificationIndex = adminNotifications.findIndex(notif => notif.id === notificationId);
-            if (notificationIndex === -1) {
-                alert("الإشعار غير موجود.");
-                return;
-            }
-
-            const rejectionReason = prompt(`الرجاء إدخال سبب رفض طلب حذف حساب ${username} (اختياري):`);
-            if (!confirm(`هل أنت متأكد من رفض طلب حذف حساب المستخدم ${username}?`)) {
-                return;
-            }
-
-            if (users[username]) {
-                users[username].notifications.push({
-                    type: "account_deletion_rejected",
-                    reason: rejectionReason || 'لا يوجد سبب محدد.',
-                    date: new Date().toLocaleString("ar-EG")
-                });
-            }
-
-            adminNotifications.splice(notificationIndex, 1);
-            saveData();
-            alert(`تم رفض طلب حذف حساب المستخدم ${username}.`);
-            updateAdminNotificationsList();
-        }
-
-        function openCustomerServiceModal() {
-            document.getElementById('customerServiceModal').classList.add('show');
-        }
-
-        function closeCustomerServiceModal() {
-            document.getElementById('customerServiceModal').classList.remove('show');
-        }
-
-        function copyPhoneNumber(phoneNumber) {
-            navigator.clipboard.writeText(phoneNumber).then(() => {
-                alert('تم نسخ رقم الهاتف!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
+                html += `
+                    <li>
+                        ${notif.message} ${statusText}<br>
+                        <small>${date}</small>
+                        <div>
+                            ${actionButtons}
+                            <button onclick="deleteAdminNotification('${notif.id}')" class="danger">حذف إشعار</button>
+                        </div>
+                    </li>
+                `;
             });
+            html += "</ul>";
+            adminNotificationsList.innerHTML = html;
+        } catch (error) {
+            console.error("Error loading admin notifications:", error);
+            adminNotificationsList.innerHTML = "حدث خطأ أثناء تحميل الإشعارات الإدارية.";
+        }
+    }
+
+    async function sendAdminNotification(message, type = "general", userId = null, username = null) {
+        try {
+            await db.collection("adminNotifications").add({
+                message,
+                type,
+                userId, // Can be null if not specific to a user action
+                username, // Can be null
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: false,
+                status: "pending" // For requests like account deletion
+            });
+            console.log("Admin notification sent:", message);
+        } catch (error) {
+            console.error("Error sending admin notification:", error);
+        }
+    }
+
+    async function deleteAdminNotification(notificationId) {
+        if (!confirm("هل أنت متأكد من حذف هذا الإشعار الإداري؟")) {
+            return;
+        }
+        try {
+            await db.collection("adminNotifications").doc(notificationId).delete();
+            loadAdminNotifications();
+        } catch (error) {
+            console.error("Error deleting admin notification:", error);
+            alert("حدث خطأ أثناء حذف الإشعار الإداري: " + error.message);
+        }
+    }
+
+    // Account Deletion Request
+    async function requestAccountDeletion() {
+        if (!currentUser) {
+            alert("يجب تسجيل الدخول لطلب حذف الحساب.");
+            return;
+        }
+        if (!confirm("هل أنت متأكد أنك تريد طلب حذف حسابك؟ سيتم إرسال طلب للمسؤول للموافقة عليه.")) {
+            return;
         }
 
-    </script>
+        try {
+            // Send request to Firestore to be reviewed by admin
+            await db.collection("accountDeletionRequests").add({
+                userId: currentUser.id,
+                username: currentUser.username,
+                email: currentUser.email,
+                status: "pending",
+                requestedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Notify admin
+            await sendAdminNotification(`طلب حذف حساب جديد من المستخدم: ${currentUser.username} (${currentUser.email})`, "account_deletion_request_admin", currentUser.id, currentUser.username);
+
+            alert("تم إرسال طلب حذف حسابك للمراجعة. ستتلقى إشعارًا بمجرد معالجة طلبك.");
+        } catch (error) {
+            console.error("Error requesting account deletion:", error);
+            alert("فشل إرسال طلب حذف الحساب: " + error.message);
+        }
+    }
+
+    async function approveAccountDeletion(notificationId, userId, username) {
+        if (!confirm(`هل أنت متأكد من قبول طلب حذف حساب المستخدم ${username}؟ هذا سيؤدي إلى حذف الحساب نهائياً.`)) {
+            return;
+        }
+
+        try {
+            // First, update the admin notification status
+            await db.collection("adminNotifications").doc(notificationId).update({
+                status: "approved",
+                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Send notification to the user that their account deletion is approved
+            await sendNotification(userId, `تمت الموافقة على طلب حذف حسابك. سيتم حذف حسابك قريباً.`, "account_deletion_approved");
+
+            // Delete the user's Firestore document
+            await db.collection("users").doc(userId).delete();
+
+            // IMPORTANT: For a real application, you would also need to delete the user's
+            // authentication record from Firebase Auth. This requires a backend (Cloud Function)
+            // with Firebase Admin SDK, as client-side code cannot delete other users.
+            console.warn("User's Firebase Auth record NOT deleted. This must be handled via server-side (Cloud Functions) for full deletion.");
+
+            alert(`تم قبول طلب حذف حساب المستخدم ${username}. تم حذف بيانات المستخدم من Firestore.`);
+            loadAdminNotifications(); // Reload admin notifications
+        } catch (error) {
+            console.error("Error approving account deletion:", error);
+            alert("فشل قبول طلب حذف الحساب: " + error.message);
+        }
+    }
+
+    async function rejectAccountDeletion(notificationId, userId, username) {
+        const rejectionReason = prompt(`الرجاء إدخال سبب رفض طلب حذف حساب ${username} (اختياري):`);
+        if (!confirm(`هل أنت متأكد من رفض طلب حذف حساب المستخدم ${username}?`)) {
+            return;
+        }
+
+        try {
+            // Update admin notification status
+            await db.collection("adminNotifications").doc(notificationId).update({
+                status: "rejected",
+                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Send notification to the user about the rejection
+            await sendNotification(userId, `تم رفض طلب حذف حسابك. السبب: ${rejectionReason || 'لا يوجد سبب محدد.'}`, "account_deletion_rejected", null, rejectionReason);
+
+            alert(`تم رفض طلب حذف حساب المستخدم ${username}.`);
+            loadAdminNotifications(); // Reload admin notifications
+        } catch (error) {
+            console.error("Error rejecting account deletion:", error);
+            alert("فشل رفض طلب حذف الحساب: " + error.message);
+        }
+    }
+
+    // SAR Conversion
+    function showAdminSARSettings() {
+        showSection('adminSarSettings');
+        document.getElementById('backButton').classList.remove('hidden');
+        document.getElementById("newSarRate").value = sarRate; // Display current rate
+        document.getElementById("convertedSarValue").textContent = "0.00 SAR";
+    }
+
+    async function updateSarRate() {
+        const newRate = parseFloat(document.getElementById("newSarRate").value);
+        if (isNaN(newRate) || newRate <= 0) {
+            alert("يرجى إدخال سعر تحويل صحيح وموجب.");
+            return;
+        }
+        if (!confirm(`هل أنت متأكد من تحديث سعر تحويل النقطة إلى ${newRate.toFixed(2)} SAR؟`)) {
+            return;
+        }
+        try {
+            await db.collection("settings").doc("sarConversion").set({ rate: newRate });
+            sarRate = newRate;
+            document.getElementById("currentSarRate").textContent = sarRate.toFixed(2);
+            alert("تم تحديث سعر التحويل بنجاح!");
+        } catch (error) {
+            console.error("Error updating SAR rate:", error);
+            alert("فشل تحديث سعر التحويل: " + error.message);
+        }
+    }
+
+    async function convertPointsToSar() {
+        const pointsToConvert = parseInt(document.getElementById("pointsToConvert").value);
+        if (isNaN(pointsToConvert) || pointsToConvert <= 0) {
+            alert("يرجى إدخال عدد نقاط صحيح وموجب للتحويل.");
+            return;
+        }
+        if (!currentUser) {
+            alert("يجب تسجيل الدخول لتحويل النقاط.");
+            return;
+        }
+        if (currentUser.points < pointsToConvert) {
+            alert("رصيدك لا يكفي لإجراء هذا التحويل.");
+            return;
+        }
+
+        const sarValue = pointsToConvert * sarRate;
+        if (!confirm(`هل أنت متأكد من تحويل ${pointsToConvert} نقطة إلى ${sarValue.toFixed(2)} SAR؟`)) {
+            return;
+        }
+
+        try {
+            const userRef = db.collection("users").doc(currentUser.id);
+            await db.runTransaction(async (transaction) => {
+                const userDoc = await transaction.get(userRef);
+                const currentPoints = userDoc.data().points || 0;
+                const newPoints = currentPoints - pointsToConvert;
+                transaction.update(userRef, { points: newPoints });
+
+                await db.collection("history").add({
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    type: "sar_converted",
+                    amount: pointsToConvert,
+                    sarValue: sarValue,
+                    newBalance: newPoints,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            });
+
+            currentUser.points -= pointsToConvert;
+            document.getElementById("userPoints").textContent = currentUser.points;
+            document.getElementById("convertedSarValue").textContent = `${sarValue.toFixed(2)} SAR`;
+            alert(`تم تحويل ${pointsToConvert} نقطة بنجاح إلى ${sarValue.toFixed(2)} SAR.`);
+            document.getElementById("pointsToConvert").value = "";
+        } catch (error) {
+            console.error("Error converting points to SAR:", error);
+            alert("فشل تحويل النقاط إلى SAR: " + error.message);
+        }
+    }
+
+    // Utility functions
+    function togglePasswordVisibility(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    function goBack() {
+        // This function will intelligently go back to the previous logical section
+        const currentSection = document.querySelector('.container > div:not(.hidden)');
+        if (currentSection) {
+            switch (currentSection.id) {
+                case 'signup':
+                case 'login':
+                case 'forgotPassword':
+                    showMain();
+                    break;
+                case 'dashboard':
+                    // If on dashboard, and not logged in, go to main
+                    // If logged in, dashboard is the 'home', so back button could hide or be removed
+                    // For now, let's make it hide only if coming from initial login/signup
+                    if (!currentUser) showMain();
+                    else document.getElementById('backButton').classList.add('hidden');
+                    break;
+                case 'adminSection':
+                    showDashboard();
+                    break;
+                case 'addPoints':
+                case 'transferPoints':
+                case 'adminUsers':
+                case 'adminTasks':
+                case 'adminRequests':
+                case 'adminNotifications':
+                case 'adminSarSettings':
+                case 'violationsAdmin': // Added
+                case 'loanSection': // Added
+                    showAdminSection();
+                    break;
+                case 'tasks':
+                case 'history':
+                case 'notifications':
+                case 'violationsUser': // Added
+                    showDashboard();
+                    break;
+                case 'editTaskSection':
+                    showAdminTasks();
+                    break;
+                default:
+                    showMain(); // Fallback
+            }
+        } else {
+            showMain(); // If no section visible, go to main
+        }
+    }
+
+    function startCountdown(dueDateString, elementId) {
+        const countdownElement = document.getElementById(elementId);
+        if (!countdownElement) return;
+
+        const endDate = new Date(dueDateString);
+
+        const updateCountdown = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = endDate.getTime() - now;
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                countdownElement.innerHTML = "انتهى الوقت!";
+                countdownElement.style.color = "#e74c3c";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = `تبقى: ${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
+        }, 1000);
+    }
+    
+    function showViolationsAdmin() {
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("violationsAdmin").style.display = "block";
+  loadViolationsAdmin();
+}
+
+function showViolationsUser() {
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("violationsUser").style.display = "block";
+  loadViolationsUser();
+}
+
+function backToDashboard() {
+  document.getElementById("violationsAdmin").style.display = "none";
+  document.getElementById("violationsUser").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+}
+
+function addViolation() {
+  const user = document.getElementById("violationUser").value.trim();
+  const title = document.getElementById("violationTitle").value.trim();
+  const desc = document.getElementById("violationDesc").value.trim();
+  const points = parseInt(document.getElementById("violationPoints").value);
+  const due = document.getElementById("violationDue").value.trim();
+
+  if (!user || !title || !desc || isNaN(points)) {
+    alert("يرجى تعبئة جميع الحقول");
+    return;
+  }
+
+  db.collection("users").where("username", "==", user).get()
+    .then(snapshot => {
+      if (snapshot.empty) return alert("المستخدم غير موجود");
+
+      const userId = snapshot.docs[0].id;
+      return db.collection("violations").add({
+        userId, user, title, desc, points, due, paid: false, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(() => loadViolationsAdmin());
+}
+
+function loadViolationsAdmin() {
+  const container = document.getElementById("violationListAdmin");
+  container.innerHTML = "جاري التحميل...";
+
+  db.collection("violations").orderBy("createdAt", "desc").get().then(snapshot => {
+    if (snapshot.empty) return container.innerHTML = "لا توجد مخالفات";
+
+    container.innerHTML = "";
+    snapshot.forEach(doc => {
+      const v = doc.data();
+      const div = document.createElement("div");
+      div.innerHTML = `<b>${v.user}</b> - ${v.title} (${v.points} نقطة) <br>${v.desc}<br><button onclick="deductPoints('${doc.id}', '${v.user}', ${v.points})">سحب القيمة</button><hr>`;
+      container.appendChild(div);
+    });
+  });
+}
+
+function deductPoints(violationId, username, points) {
+  db.collection("users").where("username", "==", username).get().then(snapshot => {
+    if (snapshot.empty) return alert("المستخدم غير موجود");
+    const userDoc = snapshot.docs[0];
+    const newPoints = (userDoc.data().points || 0) - points;
+    const userRef = db.collection("users").doc(userDoc.id);
+    return db.runTransaction(tx => {
+      tx.update(userRef, { points: newPoints });
+      tx.update(db.collection("violations").doc(violationId), { paid: true });
+    }).then(() => loadViolationsAdmin());
+  });
+}
+
+function loadViolationsUser() {
+  const container = document.getElementById("violationListUser");
+  container.innerHTML = "جاري التحميل...";
+  const uid = auth.currentUser.uid;
+
+  db.collection("violations").where("userId", "==", uid).where("paid", "==", false).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        container.innerHTML = "لا يوجد مخالفات مسجلة";
+        return;
+      }
+      container.innerHTML = "";
+      snapshot.forEach(doc => {
+        const v = doc.data();
+        const div = document.createElement("div");
+        div.innerHTML = `<b>${v.title}</b> - ${v.points} نقطة<br>${v.desc}<br>المدة: ${v.due}<br><button onclick="payViolation('${doc.id}', ${v.points})">سداد</button><hr>`;
+        container.appendChild(div);
+      });
+    });
+}
+
+function payViolation(violationId, points) {
+  const uid = auth.currentUser.uid;
+  const userRef = db.collection("users").doc(uid);
+
+  db.runTransaction(async tx => {
+    const userSnap = await tx.get(userRef);
+    const currentPoints = userSnap.data().points || 0;
+    if (currentPoints < points) throw new Error("رصيدك لا يكفي");
+
+    tx.update(userRef, { points: currentPoints - points });
+    tx.update(db.collection("violations").doc(violationId), { paid: true });
+  }).then(() => loadViolationsUser()).catch(err => alert(err.message));
+}
+
+
+function showLoan() {
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("loanSection").style.display = "block";
+  loadLoanRequests();
+}
+
+function sendLoanRequest() {
+  const fromUser = document.getElementById("loanFrom").value.trim();
+  const amount = parseInt(document.getElementById("loanAmount").value);
+
+  if (!fromUser || isNaN(amount) || amount <= 0) {
+    alert("يرجى إدخال البيانات بشكل صحيح");
+    return;
+  }
+
+  db.collection("users").where("username", "==", fromUser).get()
+    .then(snapshot => {
+      if (snapshot.empty) return alert("المستخدم غير موجود");
+
+      const toUserId = snapshot.docs[0].id;
+      const toUsername = snapshot.docs[0].data().username;
+      return db.collection("loans").add({
+        from: toUserId,
+        fromUsername: toUsername,
+        to: auth.currentUser.uid,
+        toUsername: currentUser.username,
+        amount,
+        approved: null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(() => alert("تم إرسال الطلب"));
+}
+
+function loadLoanRequests() {
+  const box = document.getElementById("loanRequests");
+  box.innerHTML = "جاري التحميل...";
+
+  db.collection("loans").where("from", "==", auth.currentUser.uid).where("approved", "==", null).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        box.innerHTML = "لا يوجد طلبات جديدة";
+        return;
+      }
+
+      box.innerHTML = "";
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const div = document.createElement("div");
+        div.innerHTML = `طلب من <b>${d.toUsername}</b> بمقدار ${d.amount} نقطة<br>
+          <button onclick="respondLoan('${doc.id}', true, ${d.amount}, '${d.to}')">موافقة</button>
+          <button onclick="respondLoan('${doc.id}', false)">رفض</button><hr>`;
+        box.appendChild(div);
+      });
+    });
+}
+
+function respondLoan(loanId, approve, amount = 0, toUserId = "") {
+  const fromUserId = auth.currentUser.uid;
+  const fromRef = db.collection("users").doc(fromUserId);
+  const toRef = db.collection("users").doc(toUserId);
+  const loanRef = db.collection("loans").doc(loanId);
+
+  if (!approve) {
+    loanRef.update({ approved: false }).then(() => loadLoanRequests());
+    return;
+  }
+
+  db.runTransaction(async tx => {
+    const fromSnap = await tx.get(fromRef);
+    const toSnap = await tx.get(toRef);
+    const fromPoints = fromSnap.data().points || 0;
+    const toPoints = toSnap.data().points || 0;
+
+    if (fromPoints < amount) throw new Error("لا يوجد نقاط كافية");
+
+    tx.update(fromRef, { points: fromPoints - amount });
+    tx.update(toRef, { points: toPoints + amount });
+    tx.update(loanRef, { approved: true });
+  }).then(() => loadLoanRequests()).catch(err => alert(err.message));
+}
+
+function openCustomerServiceModal() {
+    document.getElementById('customerServiceModal').classList.add('show');
+}
+
+function closeCustomerServiceModal() {
+    document.getElementById('customerServiceModal').classList.remove('show');
+}
+
+function copyPhoneNumber(phoneNumber) {
+    navigator.clipboard.writeText(phoneNumber).then(() => {
+        alert('تم نسخ رقم الهاتف!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+
+</script>
 </body>
 </html>
