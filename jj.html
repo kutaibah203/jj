@@ -756,7 +756,7 @@
         <h1>مرحبًا بك في نقطتي</h1>
 
         <div id="main">
-            <button onclick="showSignup()">إنشاء حساب</button>
+            <button onclick="showsignup()">إنشاء حساب</button>
             <button onclick="showLogin()">تسجيل الدخول</button>
             <button onclick="showForgotPassword()">نسيت كلمة المرور؟</button>
         </div>
@@ -1007,8 +1007,8 @@
             projectId: "nktati",
             storageBucket: "nktati.firebasestorage.app",
             messagingSenderId: "557364979891",
-            appId: "1:557364979891:web:f458d39cb67547a723e8c6",
-            measurementId: "G-47VGPGTET6"
+            appId: "1:557364979891:web:745486dd8398ce7923e8c6",
+            measurementId: "G-LJYRCQXG1Q"
         };
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
@@ -3509,5 +3509,16 @@
         }
 
     </script>
+<script>
+function showSignup() {
+    showPage("signup");
+    clearSignupForm();
+}
+
+function showLogin() {
+    showPage("login");
+    clearLoginForm();
+}
+</script>
 </body>
 </html>
