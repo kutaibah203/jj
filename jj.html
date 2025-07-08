@@ -1235,6 +1235,8 @@
                         loginError.innerText = 'اسم المستخدم غير موجود.';
                         return;
                     }
+                    showPage('dashboard');
+                    
                     const userEmail = usernameCheck.docs[0].data().email;
                     userCredential = await auth.signInWithEmailAndPassword(userEmail, password);
                 }
